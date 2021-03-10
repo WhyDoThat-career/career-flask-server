@@ -1,0 +1,14 @@
+flask
+flask-admin
+Flask-BabelEx
+flask-cors
+sqlalchemy
+flask-sqlalchemy
+tablib
+sqlalchemy_utils
+arrow
+colour
+email_validator
+pymongo
+pymysql
+flask-login

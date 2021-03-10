@@ -1,0 +1,23 @@
+version: "3" # 파일 규격 버전
+services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
+  flask :
+    build: .
+    container_name: flask-keyog
+    restart : always
+    ports :
+      - "8888:8888"
+    volumes :
+      - .:/opt
+  db: # 서비스 명
+    image: mysql:5.7.30 # 사용할 이미지
+    restart : always
+    container_name: mysql-keyog # 컨테이너 이름 설정
+    ports:
+      - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+    environment: # -e 옵션
+      MYSQL_ROOT_PASSWORD: "root"  # MYSQL 패스워드 설정 옵션
+    command: # 명령어 실행
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ~/WhyDoThat/backend/database:/var/lib/mysql # -v 옵션 (다렉토리 마운트 설정)

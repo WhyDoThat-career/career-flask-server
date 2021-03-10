@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.js": "/static/js/main.01b7ed29.chunk.js",
+    "main.js.map": "/static/js/main.01b7ed29.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.2293a02c.js",
+    "runtime-main.js.map": "/static/js/runtime-main.2293a02c.js.map",
+    "static/js/2.b7d9f12c.chunk.js": "/static/js/2.b7d9f12c.chunk.js",
+    "static/js/2.b7d9f12c.chunk.js.map": "/static/js/2.b7d9f12c.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.3284c83df32f83b4c6bd998cd0460645.js": "/precache-manifest.3284c83df32f83b4c6bd998cd0460645.js",
+    "service-worker.js": "/service-worker.js",
+    "static/js/2.b7d9f12c.chunk.js.LICENSE.txt": "/static/js/2.b7d9f12c.chunk.js.LICENSE.txt",
+    "static/media/DIN2014-Regular.woff": "/static/media/DIN2014-Regular.15ac4d53.woff",
+    "static/media/gopizza.png": "/static/media/gopizza.f610ee53.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2293a02c.js",
+    "static/js/2.b7d9f12c.chunk.js",
+    "static/js/main.01b7ed29.chunk.js"
+  ]
+}
