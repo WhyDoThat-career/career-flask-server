@@ -10,7 +10,7 @@ def index() :
         if not current_user.is_authenticated :
             return redirect(url_for('login'))
         else :
-            return redirect('/admin')
+            return redirect('/')
 
 @app.route('/register',methods=["GET","POST"])
 def register() :
