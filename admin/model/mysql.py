@@ -2,6 +2,8 @@ from admin import db
 import uuid
 from sqlalchemy_utils import EmailType, UUIDType, URLType, IPAddressType
 
+print('test')
+
 USER_AUTH = [
     (u'admin', u'Admin'),
     (u'reqular', u'Regular'),
