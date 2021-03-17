@@ -60,4 +60,14 @@ def getDataSmallCompany():
 def getDataBigCompany():
     if request.method == "GET" :
         return data_mgmt.get_data_big_company()
+
+@app.route('/getdata/sector',methods=["GET","POST"])
+def getDataSector():
+    if request.method == "GET" :
+        return data_mgmt.get_data_sector()
+
+# @app.route('/getdata/skills',methods=["GET","POST"])
+# def getDataBigSkills():
+#     if request.method == "GET" :
+#         return data_mgmt.get_data_big_company()
 #404 Page
