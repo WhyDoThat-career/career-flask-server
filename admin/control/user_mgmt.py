@@ -5,7 +5,7 @@ from flask_login import login_user
 from bson import json_util, ObjectId
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
-from admin.model.mysql import User
+from admin.model.mysql import User,JobSector
 import datetime
 
 def checkloginpassword():
@@ -60,6 +60,12 @@ def registerAdmin():
         user.password = generate_password_hash('wdt210309')
 
         db.session.add(user)
+
+        for sector_name in app.config['JOB_SECTOR'] :
+            sector = JobSector()
+            sector.name = sector_name
+            db.session.add(sector)
+            
         db.session.commit()
         print('Create Admin account')
     else :
