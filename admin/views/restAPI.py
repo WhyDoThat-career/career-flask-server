@@ -10,7 +10,7 @@ def index() :
         if not current_user.is_authenticated :
             return redirect(url_for('login'))
         else :
-            return redirect('/')
+            return redirect('/admin')
 
 @app.route('/register',methods=["GET","POST"])
 def register() :
@@ -51,8 +51,13 @@ def logout():  # logout function
 def forgotpassword():
     return render_template('forgot-password.html')
 
-@app.route('/getdata',methods=["GET","POST"])
-def getData():
+@app.route('/getdata/smallcompany',methods=["GET","POST"])
+def getDataSmallCompany():
     if request.method == "GET" :
-        return data_mgmt.get_data()
+        return data_mgmt.get_data_small_company()
+
+@app.route('/getdata/bigcompany',methods=["GET","POST"])
+def getDataBigCompany():
+    if request.method == "GET" :
+        return data_mgmt.get_data_big_company()
 #404 Page
