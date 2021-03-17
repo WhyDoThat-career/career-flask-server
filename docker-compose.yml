@@ -1,13 +1,13 @@
 version: "3" # 파일 규격 버전
 services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
   flask :
-    build: .
+    build: ~/career-flask-server
     container_name: flask-keyog
     restart : always
     ports :
       - "8888:8888"
     volumes :
-      - .:/opt
+      - ~/career-flask-server:/opt
   db: # 서비스 명
     image: mysql:5.7.30 # 사용할 이미지
     restart : always
@@ -21,3 +21,4 @@ services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
       - --collation-server=utf8mb4_unicode_ci
     volumes:
       - ~/career-flask-server/database:/var/lib/mysql # -v 옵션 (다렉토리 마운트 설정)
+

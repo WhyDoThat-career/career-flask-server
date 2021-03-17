@@ -12,3 +12,4 @@ email_validator
 pymongo
 pymysql
 flask-login
+gunicorn
