@@ -58,6 +58,7 @@ class JobDetail(db.Model) :
     company_name    = db.Column(db.String(100))
     company_address = db.Column(db.String(500))
     logo_image      = db.Column(db.String(500))
+    big_company    = db.Column(db.Boolean)
     platform        = db.Column(db.String(100))
     crawl_date      = db.Column(db.DateTime)
     

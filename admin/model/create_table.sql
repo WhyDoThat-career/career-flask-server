@@ -15,6 +15,7 @@ create table job_detail (
     deadline date,
     company_name varchar(100),
     company_address varchar(500),
+    big_company boolean,
     platform varchar(100),
     logo_image varchar(500)
 ) DEFAULT CHARSET=utf8mb4;
