@@ -60,6 +60,17 @@ class JobDetail(db.Model) :
     logo_image      = db.Column(db.String(500))
     platform        = db.Column(db.String(100))
     crawl_date      = db.Column(db.DateTime)
+    
+    @property
+    def get_data(self):
+        dictionary = self.__dict__
+        try :
+            del dictionary['_sa_instance_state']
+            dictionary['deadline'] = str(dictionary['deadline'])
+            dictionary['crawl_date'] = str(dictionary['crawl_date'])
+        except :
+            pass
+        return dictionary
 
 skills_sector_table = db.Table('skills_sector',db.Model.metadata,
                             db.Column('job_skill_id', db.Integer, db.ForeignKey('jobsector.id')),

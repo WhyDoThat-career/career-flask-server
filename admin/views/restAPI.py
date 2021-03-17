@@ -1,7 +1,7 @@
 from admin import app
 from flask import send_from_directory,render_template
 from flask import request, redirect, url_for, session
-from admin.control import user_mgmt
+from admin.control import user_mgmt,data_mgmt
 from flask_login import logout_user,current_user
 
 @app.route('/',methods=["GET","POST"])
@@ -51,4 +51,8 @@ def logout():  # logout function
 def forgotpassword():
     return render_template('forgot-password.html')
 
+@app.route('/getdata',methods=["GET","POST"])
+def getData():
+    if request.method == "GET" :
+        return data_mgmt.get_data()
 #404 Page
