@@ -111,6 +111,7 @@ class JobDetailAdmin(sqla.ModelView) :
         'company_name', 
         'sector',
         'skill_tag', 
+        'big_company'
         'platform',
     ]
     column_details_list = [
@@ -128,6 +129,7 @@ class JobDetailAdmin(sqla.ModelView) :
         'company_address', 
         'logo_image',
         'platform',
+        'big_company',
         'main_text',
     ]
     column_formatters = {

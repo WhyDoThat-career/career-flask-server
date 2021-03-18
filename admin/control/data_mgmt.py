@@ -8,7 +8,7 @@ from admin.model.mysql import User,JobDetail,JobSector
 import datetime
 
 def get_data_small_company() :
-    data = db.session.query(JobDetail).filter_by(big_company=False).all()
+    data = db.session.query(JobDetail).filter_by(big_company=0).all()
     print(f'LOG: 데이터 길이 {len(data)}')
     print([cl.get_data for cl in data])
     print(str(datetime.datetime.now()))
@@ -22,7 +22,7 @@ def get_data_small_company() :
     return json.dumps(response_data)
 
 def get_data_big_company() :
-    data = db.session.query(JobDetail).filter_by(big_company=True).all()
+    data = db.session.query(JobDetail).filter_by(big_company=1).all()
     print(f'LOG: 데이터 길이 {len(data)}')
     print([cl.get_data for cl in data])
     print(str(datetime.datetime.now()))
