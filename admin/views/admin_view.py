@@ -111,7 +111,7 @@ class JobDetailAdmin(sqla.ModelView) :
         'company_name', 
         'sector',
         'skill_tag', 
-        'big_company'
+        'big_company',
         'platform',
     ]
     column_details_list = [
