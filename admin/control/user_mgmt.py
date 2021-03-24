@@ -68,5 +68,7 @@ def registerAdmin():
             
         db.session.commit()
         print('Create Admin account')
+        return ""
     else :
         print('Already Exist Admin account')
+        return ""

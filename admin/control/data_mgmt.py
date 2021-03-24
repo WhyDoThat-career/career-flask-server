@@ -19,7 +19,7 @@ def get_data_small_company() :
         'send_time' : send_time,
     }
     
-    return json.dumps(response_data)
+    return json.dumps(response_data, ensure_ascii=False)
 
 def get_data_big_company() :
     data = db.session.query(JobDetail).filter_by(big_company=1).all()
@@ -33,7 +33,7 @@ def get_data_big_company() :
         'send_time' : send_time,
     }
     
-    return json.dumps(response_data)
+    return json.dumps(response_data, ensure_ascii=False)
 
 def get_data_sector() :
     data = db.session.query(JobSector).all()
@@ -47,4 +47,4 @@ def get_data_sector() :
         'send_time' : send_time,
     }
     
-    return json.dumps(response_data)
+    return json.dumps(response_data, ensure_ascii=False)
