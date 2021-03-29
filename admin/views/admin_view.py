@@ -1,5 +1,5 @@
 from admin import app, db
-from admin.model.mysql import USER_AUTH,User,JobDetail,JobSector,JobSkill,Resume
+from admin.model.mysql import USER_AUTH,User,JobDetail,JobSector,JobSkill,Resume,CompanyInfo
 
 import flask_admin as admin
 from flask_admin import expose
@@ -139,6 +139,65 @@ class JobDetailAdmin(sqla.ModelView) :
     }
     def is_accessible(self):
         return current_user.is_admin
+
+class CompanyInfoAdmin(sqla.ModelView) :
+    detail_template = 'admin/views/templates/detail.html'
+    can_view_details = True
+    column_display_pk = True
+    create_modal = True
+    edit_modal = True
+    can_export = True
+    export_types = ['csv', 'xls']
+    column_list = ['name','sector', 'scale','employees', 'star_point','salary_average','interview_level' ]
+    column_editable_list = ['sector', ]
+    column_default_sort = ('star_point', True)
+    column_sortable_list = [
+        'salary_average',
+        'crawl_date',
+        'scale',
+        'interview_level',
+        'employees'
+    ]
+    column_searchable_list = [
+        'name',
+        'sector', 
+        'scale',
+    ]
+    column_labels = {
+        'name':'Name',
+        'company_name':'Company', 
+        'scale':'Scale',
+        'employees':'Employees', 
+        'star_point':'Star_point',
+        'salary_average' : 'Salary_average',
+        'interview_level':'interview_level',
+    }
+    column_filters = [
+        'name',
+        'salary_average',
+        'crawl_date',
+        'scale',
+        'interview_level',
+        'employees'
+    ]
+    column_details_list = [
+        "crawl_date",
+        "id",     
+        "name",
+        "sector",
+        "scale",
+        "employees",
+        "establishment_date",
+        "review_count",
+        "star_point",
+        "salary_count",
+        "salary_average",
+        "interview_count",
+        "interview_level",
+        "interview_feel"
+    ]
+    def is_accessible(self):
+        return current_user.is_admin
     
 class IndexAdmin(admin.AdminIndexView) :
     @expose('/')
@@ -155,6 +214,7 @@ admin = admin.Admin(app,index_view=IndexAdmin(), name ='WhyDoThat Admin page', t
 
 admin.add_view(UserAdmin(User,db.session))
 admin.add_view(JobDetailAdmin(JobDetail,db.session))
+admin.add_view(CompanyInfoAdmin(CompanyInfo,db.session))
 admin.add_view(sqla.ModelView(JobSector,db.session))
 admin.add_view(sqla.ModelView(JobSkill,db.session))
 admin.add_view(sqla.ModelView(Resume,db.session,category='Other'))

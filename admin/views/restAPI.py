@@ -51,20 +51,15 @@ def logout():  # logout function
 def forgotpassword():
     return render_template('forgot-password.html')
 
-@app.route('/getdata/smallcompany',methods=["GET","POST"])
-def getDataSmallCompany():
+@app.route('/getdata/<selector>',methods=["GET","POST"])
+def getData(selector):
     if request.method == "GET" :
-        return data_mgmt.get_data_small_company()
+        return data_mgmt.get_data(selector)
 
-@app.route('/getdata/bigcompany',methods=["GET","POST"])
-def getDataBigCompany():
-    if request.method == "GET" :
-        return data_mgmt.get_data_big_company()
-
-@app.route('/getdata/sector',methods=["GET","POST"])
+@app.route('/getsector',methods=["GET","POST"])
 def getDataSector():
     if request.method == "GET" :
-        return data_mgmt.get_data_sector()
+        return data_mgmt.get_sector()
 
 # @app.route('/getdata/skills',methods=["GET","POST"])
 # def getDataBigSkills():

@@ -26,17 +26,17 @@ CREATE TABLE resume (
         id INTEGER NOT NULL AUTO_INCREMENT, 
         mongo_key VARCHAR(100) NOT NULL, 
         PRIMARY KEY (id)
-)
+);
 CREATE TABLE jobskill (
         id INTEGER NOT NULL AUTO_INCREMENT, 
         name VARCHAR(200), 
         PRIMARY KEY (id)
-)
+);
 CREATE TABLE jobsector (
         id INTEGER NOT NULL AUTO_INCREMENT, 
         name VARCHAR(200), 
         PRIMARY KEY (id)
-)
+);
 CREATE TABLE user (
         id CHAR(32) NOT NULL, 
         auth VARCHAR(100), 
@@ -46,10 +46,26 @@ CREATE TABLE user (
         PRIMARY KEY (id), 
         UNIQUE (email), 
         FOREIGN KEY(main_resume_id) REFERENCES resume (id)
-)
+);
 CREATE TABLE skills_sector (
         job_skill_id INTEGER, 
         job_sector_id INTEGER, 
         FOREIGN KEY(job_skill_id) REFERENCES jobsector (id), 
         FOREIGN KEY(job_sector_id) REFERENCES jobskill (id)
-)
+);
+create table company_info (
+    id int unsigned not null auto_increment primary key,
+    crawl_date datetime,
+    name varchar(200) not null,
+    sector varchar(200),
+    scale varchar(200),
+    employees varchar(100),    
+    establishment_date datetime,
+    review_count int,
+    star_point float,
+    salary_count int,
+    salary_average int,
+    interview_count int,
+    interview_level varchar(100),
+    interview_feel varchar(100)
+) DEFAULT CHARSET utf8mb4;

@@ -66,10 +66,10 @@ class JobDetail(db.Model) :
     def get_data(self):
         dictionary = self.__dict__
         try :
+            del dictionary['_sa_instance_state']
             dictionary['deadline'] = str(dictionary['deadline'])
             dictionary['crawl_date'] = str(dictionary['crawl_date'])
             dictionary['skill_tag'] = dictionary['skill_tag'].split(',')
-            del dictionary['_sa_instance_state']
         except :
             pass
         return dictionary
@@ -87,6 +87,14 @@ class JobSkill(db.Model) :
 
     def __str__(self):
         return "{}".format(self.name)
+    @property
+    def get_data(self):
+        dictionary = self.__dict__
+        try :
+            del dictionary['_sa_instance_state']
+        except :
+            pass
+        return dictionary
 
 class JobSector(db.Model) :
     __tablename__ = "jobsector"
@@ -95,3 +103,39 @@ class JobSector(db.Model) :
 
     def __str__(self):
         return "{}".format(self.name)
+    @property
+    def get_data(self):
+        dictionary = self.__dict__
+        try :
+            del dictionary['_sa_instance_state']
+        except :
+            pass
+        return dictionary
+
+class CompanyInfo(db.Model) :
+    __tablename__ = "company_info"
+    id = db.Column(db.Integer, primary_key=True)
+    crawl_date  = db.Column(db.DateTime)
+    name        = db.Column(db.String(200))
+    sector      = db.Column(db.String(200))
+    scale       = db.Column(db.String(200))
+    employees   = db.Column(db.String(100))
+    establishment_date = db.Column(db.Date)
+    review_count = db.Column(db.Integer)
+    star_point  = db.Column(db.Float)
+    salary_count = db.Column(db.Integer)
+    salary_average = db.Column(db.Integer)
+    interview_count = db.Column(db.Integer)
+    interview_level = db.Column(db.String(100))
+    interview_feel = db.Column(db.String(100))
+
+    def __str__(self):
+        return "{}".format(self.name)
+    @property
+    def get_data(self):
+        dictionary = self.__dict__
+        try :
+            del dictionary['_sa_instance_state']
+        except :
+            pass
+        return dictionary
