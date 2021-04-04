@@ -1,4 +1,5 @@
 import json
+import pymongo
 
 def load_key(key_file) :
     with open(key_file) as key_file :
@@ -16,6 +17,10 @@ database = "crawl_job"
 SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{db['user']}:{db['password']}@{db['host']}:{db['port']}/{database}?charset=utf8mb4"
 SQLALCHEMY_ECHO = True
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+mongo = load_key(key_file='./keys/aws_mongo_key.json')
+MONGO_CONN = pymongo.MongoClient(f"mongodb://{mongo['host']}:{mongo['port']}",
+                                    username=mongo['user'],password=mongo['password'])
 
 JOB_SECTOR = ['Back-end','Front-end','WEB/Full-stack','Android','IOS',
               'Mobile','Data-analyst','Data-engineer','Data-scientist',

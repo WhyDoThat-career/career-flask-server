@@ -26,3 +26,15 @@ services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
     volumes:
       - ~/career-flask-server/database:/var/lib/mysql # -v 옵션 (다렉토리 마운트 설정)
 
+  mongo:
+    image: mongo
+    container_name: mongo-keyog
+    restart: always
+    ports:
+      - "27017:27017"
+    environment: # -e 옵션
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+    volumes:
+      - ~/career-flask-server/mongo:/data/db

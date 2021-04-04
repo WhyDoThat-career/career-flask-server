@@ -33,7 +33,6 @@ class UserAdmin(sqla.ModelView):
         'auth',
         'nickname',
         'email',
-        'main_resume',
     ]
     column_searchable_list = [
         'nickname',

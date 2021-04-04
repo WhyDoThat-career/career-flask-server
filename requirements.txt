@@ -3,6 +3,8 @@ flask-admin
 Flask-BabelEx
 flask-cors
 sqlalchemy==1.3.23
+flask_script
+flask-migrate
 flask-sqlalchemy
 tablib
 sqlalchemy_utils

@@ -1,0 +1,7 @@
+{
+    "name" : "mongo" ,
+    "host" : "mongo-keyog",
+    "port" : "27017",
+    "user" : "root",
+    "password" : "root"
+}

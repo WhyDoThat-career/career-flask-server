@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
 from flask_cors import CORS
 from flask_login import LoginManager
+from flask_migrate import Migrate,MigrateCommand
+from flask_script import Manager
 
 app = Flask(__name__, static_folder='./build/static',template_folder='./views/templates')
 app.config.from_pyfile('config.py')

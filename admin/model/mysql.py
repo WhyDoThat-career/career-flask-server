@@ -9,7 +9,18 @@ USER_AUTH = [
 
 class Resume(db.Model) :
     id     = db.Column(db.Integer, primary_key=True)
+    main_flag = db.Column(db.Boolean, nullable=False)
     mongo_key = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.String(32), db.ForeignKey('user.id'))
+
+    @property
+    def get_data(self):
+        dictionary = self.__dict__
+        try :
+            del dictionary['_sa_instance_state']
+        except :
+            pass
+        return dictionary
 
 class User(db.Model) :
     id          = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
@@ -17,8 +28,7 @@ class User(db.Model) :
     auth           = db.Column(db.String(100))
     email          = db.Column(EmailType, unique=True, nullable=False)
     nickname       = db.Column(db.String(100), nullable=False)
-    main_resume_id = db.Column(db.Integer, db.ForeignKey(Resume.id),nullable=True)
-    main_resume    = db.relationship('Resume',foreign_keys=[main_resume_id])
+    resume    = db.relationship('Resume')
 
     @property
     def is_authenticated(self):
@@ -100,6 +110,7 @@ class JobSector(db.Model) :
     __tablename__ = "jobsector"
     id = db.Column(db.Integer, primary_key=True)
     name  = db.Column(db.String(200))
+    skills = db.relationship('JobSkill',secondary=skills_sector_table)
 
     def __str__(self):
         return "{}".format(self.name)
@@ -136,6 +147,8 @@ class CompanyInfo(db.Model) :
         dictionary = self.__dict__
         try :
             del dictionary['_sa_instance_state']
+            dictionary['crawl_date'] = str(dictionary['crawl_date'])
+            dictionary['establishment_date'] = str(dictionary['establishment_date'])
         except :
             pass
         return dictionary

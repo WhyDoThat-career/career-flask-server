@@ -10,7 +10,10 @@ def index() :
         if not current_user.is_authenticated :
             return redirect(url_for('login'))
         else :
-            return redirect('/admin')
+            if current_user.is_admin :
+                return redirect('/admin')
+            else :
+                return send_from_directory('build','index.html')
 
 @app.route('/register',methods=["GET","POST"])
 def register() :
@@ -51,10 +54,23 @@ def logout():  # logout function
 def forgotpassword():
     return render_template('forgot-password.html')
 
+@app.route('/getresume',methods=["GET"])
+def get_resume():
+    if current_user.is_active :
+        user_id = current_user.get_id().hex
+        return data_mgmt.get_resume(user_id)
+    else :
+        return '',404
+
 @app.route('/getdata/<selector>',methods=["GET","POST"])
 def getData(selector):
     if request.method == "GET" :
         return data_mgmt.get_data(selector)
+
+@app.route('/getcompany/<company_name>',methods=["GET","POST"])
+def getCompanyData(company_name) :
+    if request.method == "GET" :
+        return data_mgmt.get_company_data(company_name)
 
 @app.route('/getsector',methods=["GET","POST"])
 def getDataSector():
