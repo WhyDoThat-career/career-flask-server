@@ -2,7 +2,7 @@ version: "3" # 파일 규격 버전
 services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
   flask :
     build: ~/career-flask-server
-    container_name: flask-keyog
+    container_name: flask-keyog-dev
     restart : always
     ports :
       - "8888:8888"
@@ -10,31 +10,3 @@ services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
       - ~/career-flask-server:/opt
     environment:
       TZ: "Asia/Seoul"
-
-  db: # 서비스 명
-    image: mysql:5.7.30 # 사용할 이미지
-    restart : always
-    container_name: mysql-keyog # 컨테이너 이름 설정
-    ports:
-      - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
-    environment: # -e 옵션
-      MYSQL_ROOT_PASSWORD: "root"  # MYSQL 패스워드 설정 옵션
-      TZ: "Asia/Seoul"
-    command: # 명령어 실행
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - ~/career-flask-server/database:/var/lib/mysql # -v 옵션 (다렉토리 마운트 설정)
-
-  mongo:
-    image: mongo
-    container_name: mongo-keyog
-    restart: always
-    ports:
-      - "27017:27017"
-    environment: # -e 옵션
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-
-    volumes:
-      - ~/career-flask-server/mongo:/data/db

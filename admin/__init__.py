@@ -9,7 +9,7 @@ from flask_script import Manager
 app = Flask(__name__, static_folder='./build/static',template_folder='./views/templates')
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
-CORS(app)
+CORS(app,resources={r'*':{'origins':'*'}})
 
 # Initialize babel
 babel = Babel(app)
