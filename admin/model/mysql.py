@@ -84,9 +84,9 @@ class JobDetail(db.Model) :
             pass
         return dictionary
 
-skills_sector_table = db.Table('skills_sector',db.Model.metadata,
-                            db.Column('job_skill_id', db.Integer, db.ForeignKey('jobsector.id')),
-                            db.Column('job_sector_id', db.Integer, db.ForeignKey('jobskill.id'))
+skills_sector_table = db.Table('skill_sector',db.Model.metadata,
+                            db.Column('job_skill_id', db.Integer, db.ForeignKey('jobskill.id')),
+                            db.Column('job_sector_id', db.Integer, db.ForeignKey('jobsector.id'))
                         )
 
 class JobSkill(db.Model) :

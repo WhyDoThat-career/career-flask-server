@@ -35,10 +35,6 @@ def login() :
         else :
             return redirect(url_for('index'))
 
-@app.route('/checkloginemail', methods=["POST"])
-def checkUserlogin():
-    return user_mgmt.checkloginemail()
-
 @app.route('/checkloginpassword', methods=["POST"])
 def checkUserpassword():
     return user_mgmt.checkloginpassword()
