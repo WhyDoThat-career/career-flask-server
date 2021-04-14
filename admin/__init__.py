@@ -5,16 +5,22 @@ from flask_cors import CORS
 from flask_login import LoginManager
 from flask_migrate import Migrate,MigrateCommand
 from flask_script import Manager
+from oauthlib.oauth2 import WebApplicationClient
+import os
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__, static_folder='./build/static',template_folder='./views/templates')
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
-CORS(app,resources={r'*':{'origins':'*',
-                            'methods' : '*',
-                            'allow-headers':'*'}})
-
-# Initialize babel
 babel = Babel(app)
+CORS(app,resources={r'*':{'origins':'*','methods' : '*','allow-headers':'*'}})
+
+google_oauth = app.config['GOOGLE_OAUTH']
+google_client = WebApplicationClient(google_oauth['client_id'])
+google_discovery_uri = "https://accounts.google.com/.well-known/openid-configuration"
+
+github_oauth = app.config['GITHUB_OAUTH']
+github_client = WebApplicationClient(github_oauth['client_id'])
 
 from admin.model.mysql import User
 
@@ -49,3 +55,5 @@ init_login()
 
 import admin.views.admin_view
 import admin.views.restAPI
+import admin.views.google_login
+import admin.views.github_login

@@ -11,6 +11,8 @@ FLASK_ADMIN_SWATCH = 'journal'
 
 ADMIN_KEY = 'qekjqihbbjbjksknqnqklajdflkjsdivlkqjlkwjkljadslfkjibalksnf'
 SECRET_KEY = 'whydothat_secretkey'
+GOOGLE_OAUTH = load_key('./keys/google_client_secret.json')
+GITHUB_OAUTH = load_key('./keys/github_client_secret.json')
 
 db = load_key(key_file='./keys/aws_sql_key.json')
 database = "crawl_job"

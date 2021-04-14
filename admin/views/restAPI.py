@@ -3,6 +3,7 @@ from flask import send_from_directory,render_template
 from flask import request, redirect, url_for, session
 from admin.control import user_mgmt,data_mgmt
 from flask_login import logout_user,current_user
+import requests, json
 
 @app.route('/',methods=["GET","POST"])
 def index() :
@@ -14,6 +15,7 @@ def index() :
                 return redirect('/admin')
             else :
                 return send_from_directory('build','index.html')
+
 
 @app.route('/register',methods=["GET","POST"])
 def register() :
@@ -31,6 +33,7 @@ def check() :
 def login() :
     if request.method == "GET" :
         if not current_user.is_authenticated :
+            # return send_from_directory('build','index.html')
             return render_template('login.html')
         else :
             return redirect(url_for('index'))
@@ -73,8 +76,7 @@ def getDataSector():
     if request.method == "GET" :
         return data_mgmt.get_sector()
 
-# @app.route('/getdata/skills',methods=["GET","POST"])
-# def getDataBigSkills():
-#     if request.method == "GET" :
-#         return data_mgmt.get_data_big_company()
-#404 Page
+@app.route('/getskills',methods=["GET","POST"])
+def getDataSkills():
+    if request.method == "GET" :
+        return data_mgmt.get_skills()

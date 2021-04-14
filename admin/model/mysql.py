@@ -22,6 +22,11 @@ class Resume(db.Model) :
             pass
         return dictionary
 
+class Social(db.Model) :
+    id = db.Column(db.String(128), primary_key=True)
+    name = db.Column(db.String(100), primary_key=True)
+    user_id = db.Column(db.String(32), db.ForeignKey('user.id'))
+
 class User(db.Model) :
     id          = db.Column(UUIDType(binary=False), default=uuid.uuid4, primary_key=True)
     password    = db.Column(db.String(128))

@@ -15,3 +15,5 @@ pymongo
 pymysql
 flask-login
 gunicorn
+oauthlib
+requests

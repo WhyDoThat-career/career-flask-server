@@ -4,7 +4,7 @@ import flask_admin
 from flask_login import login_user
 from bson import ObjectId
 import json
-from admin.model.mysql import User,JobDetail,JobSector,CompanyInfo,Resume
+from admin.model.mysql import User,JobDetail,JobSector,CompanyInfo,Resume,JobSkill
 from admin.model.mongodb import ResumeMongo
 import datetime
 
@@ -46,6 +46,19 @@ def get_sector() :
     send_time = str(datetime.datetime.now())
     response_data = {
         'db_name' : 'JobSector',
+        'send_time' : send_time,
+        'data_length': len(data),
+        'data' : [cl.get_data for cl in data],
+    }
+    return json.dumps(response_data, ensure_ascii=False)
+
+def get_skills() :
+    data = db.session.query(JobSkill).all()
+    print(f'LOG: 데이터 길이 {len(data)}')
+    print(str(datetime.datetime.now()))
+    send_time = str(datetime.datetime.now())
+    response_data = {
+        'db_name' : 'JobSkill',
         'send_time' : send_time,
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
