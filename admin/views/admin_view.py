@@ -66,7 +66,10 @@ class UserAdmin(sqla.ModelView):
             super(UserAdmin, self).edit_form(obj)
         )
     def is_accessible(self):
-        return current_user.is_admin
+        try :
+            return current_user.is_admin
+        except :
+            False
 
 def _set_image_tag(view,text,model,name) :
     return Markup(f'<img src={model.logo_image}>')
@@ -97,6 +100,7 @@ class JobDetailAdmin(sqla.ModelView) :
         'sector',
         'skill_tag', 
         'platform',
+        'href'
     ]
     column_labels = {
         'title':'Title',
@@ -137,7 +141,10 @@ class JobDetailAdmin(sqla.ModelView) :
         'href' : _set_hyper_link
     }
     def is_accessible(self):
-        return current_user.is_admin
+        try :
+            return current_user.is_admin
+        except :
+            False
 
 class CompanyInfoAdmin(sqla.ModelView) :
     detail_template = 'admin/views/templates/detail.html'
@@ -196,7 +203,10 @@ class CompanyInfoAdmin(sqla.ModelView) :
         "interview_feel"
     ]
     def is_accessible(self):
-        return current_user.is_admin
+        try :
+            return current_user.is_admin
+        except :
+            False
     
 class IndexAdmin(admin.AdminIndexView) :
     @expose('/')
@@ -204,8 +214,10 @@ class IndexAdmin(admin.AdminIndexView) :
         if request.method == "GET" :
             if not current_user.is_authenticated :
                 return redirect(url_for('login'))
+            elif current_user.is_anonymous :
+                return render_template('error-admin.html')
             elif current_user.is_admin :
-                return super(IndexAdmin, self).index()
+                return self.render('index.html')
             else :
                 return render_template('error-admin.html')
 
