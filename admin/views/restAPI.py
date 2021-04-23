@@ -1,6 +1,6 @@
 from admin import app
 from flask import send_from_directory,render_template
-from flask import request, redirect, url_for, session
+from flask import request, redirect, url_for, session,abort
 from admin.control import user_mgmt,data_mgmt
 from flask_login import logout_user,current_user
 import requests, json
@@ -59,7 +59,7 @@ def get_resume():
         user_id = current_user.get_id().hex
         return data_mgmt.get_resume(user_id)
     else :
-        return '',404
+        return abort(404)
 
 @app.route('/getdata/<selector>',methods=["GET","POST"])
 def getData(selector):
@@ -80,3 +80,23 @@ def getDataSector():
 def getDataSkills():
     if request.method == "GET" :
         return data_mgmt.get_skills()
+
+@app.route('/getout',methods=["GET"])
+def getout():
+    return render_template('error-admin.html')
+
+@app.route('/notfound',methods=["GET"])
+def page_not_found():
+    return render_template('404.html')
+
+@app.errorhandler(401)
+def in_accessible(error):
+    return redirect(url_for('getout'))
+
+@app.errorhandler(403)
+def in_accessible(error):
+    return redirect(url_for('getout'))
+
+@app.errorhandler(404)
+def not_found(error) :
+    return redirect(url_for('page_not_found'))

@@ -9,7 +9,7 @@ from flask_admin.contrib.sqla import filters
 from flask_admin.contrib.sqla.filters import FilterEqual
 from flask_admin.form.rules import HTML,Markup
 from flask_login import logout_user,current_user
-from flask import send_from_directory,request, redirect,render_template,url_for
+from flask import send_from_directory,request, redirect,render_template,url_for,abort
 
 
 class UserAdmin(sqla.ModelView):
@@ -215,11 +215,11 @@ class IndexAdmin(admin.AdminIndexView) :
             if not current_user.is_authenticated :
                 return redirect(url_for('login'))
             elif current_user.is_anonymous :
-                return render_template('error-admin.html')
+                return redirect(url_for('getout'))
             elif current_user.is_admin :
                 return self.render('index.html')
             else :
-                return render_template('error-admin.html')
+                return redirect(url_for('getout'))
 
 admin = admin.Admin(app,index_view=IndexAdmin(), name ='WhyDoThat Admin page', template_mode='bootstrap4')
 
