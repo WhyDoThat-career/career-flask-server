@@ -13,7 +13,13 @@ app = Flask(__name__, static_folder='./build/static',template_folder='./views/te
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 babel = Babel(app)
-CORS(app,resources={r'*':{'origins':'*','methods' : '*','allow-headers':'*'}})
+CORS(app,resources={
+    r'*':{'origins':'*',
+          'methods' : '*',
+          'allow-headers':'*',
+          'supports_credentials':True
+          }
+    })
 
 google_oauth = app.config['GOOGLE_OAUTH']
 google_client = WebApplicationClient(google_oauth['client_id'])
