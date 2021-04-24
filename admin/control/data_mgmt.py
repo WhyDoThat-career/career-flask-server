@@ -17,7 +17,10 @@ def create_query(selector,page,per_page) :
         return db.session.query(JobDetail).filter_by(platform=selector).paginate(page,per_page=per_page,error_out=True)
 
 def get_data(selector) :
-    page = int(request.args.get('page'))
+    if request.args.get('page') :
+        page = int(request.args.get('page'))
+    else :
+        page = 1
     if request.args.get('per_page') :
         per_page = int(request.args.get('per_page'))
     else :
