@@ -83,11 +83,11 @@ def getDataSkills():
 
 @app.route('/getout',methods=["GET"])
 def getout():
-    return render_template('error-admin.html')
+    return render_template('error-admin.html'),401
 
 @app.route('/notfound',methods=["GET"])
 def page_not_found():
-    return render_template('404.html')
+    return render_template('404.html'),404
 
 @app.errorhandler(401)
 def in_accessible(error):
