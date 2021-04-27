@@ -10,11 +10,20 @@ import datetime
 
 def create_query(selector,page,per_page) :
     if selector == 'smallcompany' :
-        return db.session.query(JobDetail).filter_by(big_company=0).paginate(page,per_page=per_page,error_out=True)
+        return (db.session.query(JobDetail)
+                    .filter_by(big_company=0)
+                    .order_by(JobDetail.crawl_date.desc())
+                    .paginate(page,per_page=per_page,error_out=True))
     elif selector == 'bigcompany' :
-        return db.session.query(JobDetail).filter_by(big_company=1).paginate(page,per_page=per_page,error_out=True)
+        return (db.session.query(JobDetail)
+                    .filter_by(big_company=1)
+                    .order_by(JobDetail.crawl_date.desc())
+                    .paginate(page,per_page=per_page,error_out=True))
     else :
-        return db.session.query(JobDetail).filter_by(platform=selector).paginate(page,per_page=per_page,error_out=True)
+        return (db.session.query(JobDetail)
+                    .filter_by(platform=selector)
+                    .order_by(JobDetail.crawl_date.desc())
+                    .paginate(page,per_page=per_page,error_out=True))
 
 def get_data(selector) :
     if request.args.get('page') :
