@@ -6,10 +6,12 @@ from flask_login import LoginManager
 from flask_migrate import Migrate,MigrateCommand
 from flask_script import Manager
 from oauthlib.oauth2 import WebApplicationClient
-import os
+import os , boto3
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-app = Flask(__name__, static_folder='./build/static',template_folder='./views/templates')
+print(os.getcwd())
+print(os.listdir())
+app = Flask(__name__, static_folder='../build/static',template_folder='./views/templates')
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 babel = Babel(app)
@@ -58,6 +60,15 @@ def get_locale():
     return session.get('lang', 'ko')
 
 init_login()
+def downloadDirectoryFroms3(bucketName,remoteDirectoryName):
+    s3_resource = boto3.resource('s3')
+    bucket = s3_resource.Bucket(bucketName) 
+    for object in bucket.objects.filter(Prefix = remoteDirectoryName):
+        if not os.path.exists(os.path.dirname(object.key)):
+            os.makedirs(os.path.dirname(object.key))
+        bucket.download_file(object.key,object.key)
+
+downloadDirectoryFroms3('career-client','build')
 
 import admin.views.admin_view
 import admin.views.restAPI

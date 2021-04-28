@@ -9,12 +9,12 @@ import requests, json
 def index() :
     if request.method == "GET" :
         if not current_user.is_authenticated :
-            return redirect(url_for('login'))
+            return send_from_directory('../build','index.html')
         else :
             if current_user.is_admin :
                 return redirect('/admin')
             else :
-                return send_from_directory('build','index.html')
+                return send_from_directory('../build','index.html')
 
 
 @app.route('/register',methods=["GET","POST"])
@@ -87,7 +87,7 @@ def getout():
 
 @app.route('/notfound',methods=["GET"])
 def page_not_found():
-    return render_template('404.html'),404
+    return 'hi'#render_template('404.html'),404
 
 @app.errorhandler(401)
 def in_accessible(error):
