@@ -1,20 +1,25 @@
-from flask import Flask, request, session,make_response,jsonify
+from flask import Flask,Blueprint
+from flask import request, session,make_response,jsonify
+from flask import send_from_directory,redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
 from flask_cors import CORS
-from flask_login import LoginManager
+from flask_login import LoginManager,current_user
 from flask_migrate import Migrate,MigrateCommand
 from flask_script import Manager
 from oauthlib.oauth2 import WebApplicationClient
 import os , boto3
+from flask_restx import Api
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-print(os.getcwd())
-print(os.listdir())
 app = Flask(__name__, static_folder='../build/static',template_folder='./views/templates')
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 babel = Babel(app)
+blueprint = Blueprint('api',__name__,url_prefix='/api')
+api = Api(blueprint,doc='/doc/',title = 'WhyDoThat API 문서',description = '모든 API 호출은 /api/~ 로 시작합니다.')
+app.register_blueprint(blueprint)
+
 CORS(app,resources={
     r'*':{'origins':'*',
           'methods' : '*',
@@ -68,9 +73,27 @@ def downloadDirectoryFroms3(bucketName,remoteDirectoryName):
             os.makedirs(os.path.dirname(object.key))
         bucket.download_file(object.key,object.key)
 
-downloadDirectoryFroms3('career-client','build')
+@app.route('/')
+def default() :
+    return redirect('/index')
+
+@app.route('/index',methods=["GET","POST"])
+def index() :
+    if request.method == "GET" :
+        if not current_user.is_authenticated :
+            return send_from_directory('../build','index.html')
+        else :
+            if current_user.is_admin :
+                return redirect('/admin')
+            else :
+                return send_from_directory('../build','index.html')
+
+#빌드파일 업데이트
+# downloadDirectoryFroms3('career-client','build')
 
 import admin.views.admin_view
-import admin.views.restAPI
+import admin.views.loginAPI
+import admin.views.dataAPI
 import admin.views.google_login
 import admin.views.github_login
+import admin.views.restAPI_orgin

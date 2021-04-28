@@ -49,7 +49,7 @@ def get_data(selector) :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     } 
-    return json.dumps(response_data, ensure_ascii=False)
+    return response_data
 
 def get_sector() :
     data = db.session.query(JobSector).all()
@@ -62,7 +62,7 @@ def get_sector() :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     }
-    return json.dumps(response_data, ensure_ascii=False)
+    return response_data
 
 def get_skills() :
     data = db.session.query(JobSkill).all()
@@ -75,7 +75,7 @@ def get_skills() :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     }
-    return json.dumps(response_data, ensure_ascii=False)
+    return response_data
 
 def get_company_data(company_name) :
     data = db.session.query(CompanyInfo).filter_by(name=company_name).first()
@@ -93,7 +93,7 @@ def get_company_data(company_name) :
         'success' : success,
         'data' : send_data
     }
-    return json.dumps(response_data, ensure_ascii=False)
+    return response_data
 
 def get_resume(user_id) :
     data = db.session.query(Resume).filter_by(user_id=user_id).all()
@@ -111,4 +111,4 @@ def get_resume(user_id) :
         'data_length': len(data),
         'data' : data_dict,
     }
-    return json.dumps(response_data, ensure_ascii=False)
+    return response_data
