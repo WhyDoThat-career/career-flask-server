@@ -10,6 +10,23 @@ from admin.model.mongodb import ResumeMongo
 import datetime
 from random import randint
 
+def get_user() :
+    if not current_user.is_authenticated :
+        success = False
+        send_data = '알 수 없는 사용자'
+    else :
+        success = True
+        send_data = current_user.get_data
+    print(str(datetime.datetime.now()))
+    send_time = str(datetime.datetime.now())
+    response_data = {
+        'db_name' : 'User',
+        'send_time' : send_time,
+        'is_active' : success,
+        'data' : send_data
+    }
+    return response_data
+
 def register_social_connection(id,name,user_id) :
     social = Social()
     social.id = id
@@ -45,10 +62,7 @@ def registerUser(social=False,data=None):
     if social :
         user_data = data
     else :
-        fields = [k for k in request.form]               
-        values = [request.form[k] for k in request.form]
-        data = dict(zip(fields, values))
-        user_data = json.loads(json_util.dumps(data))
+        user_data = request.get_json()
         user_data["password"] = generate_password_hash(user_data["password"])
         user_data["confirmpassword"] = generate_password_hash(user_data["confirmpassword"])
 
@@ -56,6 +70,9 @@ def registerUser(social=False,data=None):
     user.email = user_data['email']
     user.nickname = user_data['nickname']
     user.password = user_data['password']
+
+    if user_data['thumbnail'] :
+        user.thumbnail = user_data['thumbnail']
 
     db.session.add(user)
     db.session.flush()
@@ -69,20 +86,19 @@ def registerUser(social=False,data=None):
     login_user(user)
 
 def checkloginpassword():
-    email = request.form["email"]
+    email = request.get_json()["email"]
     user = db.session.query(User).filter_by(email=email).first()
-    password = request.form["password"]
+    password = request.get_json()["password"]
     if check_password_hash(user.password,password) :
         login_user(user,remember=True, duration=datetime.timedelta(days=30))
-        return "correct"
+        return True
     else:
-        return "wrong"
+        return False
     
 def checkemail():
-    email = request.form["email"]
+    email = request.get_json(force=True)["email"]
     user = db.session.query(User).filter_by(email=email).first()
     if user is not None and email == user.email :
-        print('Exist')
         return "Exist"
     elif user is None and '@' in email :
         if email.split('@')[1] != '' :
@@ -132,5 +148,6 @@ def social_login(social_data,platform) :
             user_data['email'] = social_data['user_email']
             user_data['nickname'] = social_data['user_name']
             user_data['password'] = str(randint(100000,999999))
+            user_data['thumbnail'] = social_data['thumbnail']
             registerUser(social=True,data=user_data)
             register_social_connection(social_data['unique_id'],platform,current_user.id)

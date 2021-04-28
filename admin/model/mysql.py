@@ -33,6 +33,7 @@ class User(db.Model) :
     auth           = db.Column(db.String(100))
     email          = db.Column(EmailType, unique=True, nullable=False)
     nickname       = db.Column(db.String(100), nullable=False)
+    thumbnail      = db.Column(URLType, default = '/static/img/wdticon.png')
     resume    = db.relationship('Resume')
 
     @property
@@ -51,6 +52,18 @@ class User(db.Model) :
     @property
     def is_anonymous(self):
         return False
+
+    @property
+    def get_data(self):
+        dictionary = self.__dict__
+        try :
+            del dictionary['_sa_instance_state']
+            del dictionary['password']
+            del dictionary['auth']
+            dictionary['id'] = self.id.hex
+        except :
+            pass
+        return dictionary
 
     def get_id(self):
         return self.id
