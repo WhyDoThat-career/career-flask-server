@@ -5,18 +5,6 @@ from admin.control import user_mgmt,data_mgmt
 from flask_login import logout_user,current_user
 import requests, json
 
-@app.route('/',methods=["GET","POST"])
-def index() :
-    if request.method == "GET" :
-        if not current_user.is_authenticated :
-            return send_from_directory('../build','index.html')
-        else :
-            if current_user.is_admin :
-                return redirect('/admin')
-            else :
-                return send_from_directory('../build','index.html')
-
-
 @app.route('/register',methods=["GET","POST"])
 def register() :
     if request.method == "GET" :
@@ -87,7 +75,7 @@ def getout():
 
 @app.route('/notfound',methods=["GET"])
 def page_not_found():
-    return 'hi'#render_template('404.html'),404
+    return render_template('404.html'),404
 
 @app.errorhandler(401)
 def in_accessible(error):

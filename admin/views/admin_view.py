@@ -33,13 +33,14 @@ class UserAdmin(sqla.ModelView):
         'auth',
         'nickname',
         'email',
+        'thumbnail'
     ]
     column_searchable_list = [
         'nickname',
         'email',
         'auth',
     ]
-    column_editable_list = ['auth']
+    column_editable_list = ['auth','thumbnail']
     column_details_list = [
         'id',
         'password',
@@ -49,6 +50,7 @@ class UserAdmin(sqla.ModelView):
         'auth',
         'nickname',
         'email',
+        'thumbnail'
     ]
     form_create_rules = [
         'nickname',
