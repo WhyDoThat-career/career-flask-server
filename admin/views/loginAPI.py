@@ -4,6 +4,7 @@ from admin.control import user_mgmt
 from flask_login import logout_user
 from flask_restx import Namespace,Resource
 from admin.model.swagger import checkemail_model,login_model,register_model
+import json
 
 LoginFunc = Namespace('Login',description='로그인을 위한 API')
 CheckFunc = Namespace('Check',description='이메일, 비밀번호 체크 API')
@@ -48,7 +49,7 @@ class Logout(Resource) :
         '''로그아웃 API'''
         app.logger.info(json.dumps({'info':'Logout'}))
         logout_user()
-        return redirect(url_for("login"))
+        return "Logout Success" ,200
 api.add_namespace(LogoutFunc,'/logout')
 
 ForgotPasswordFunc = Namespace('Other')
@@ -57,5 +58,5 @@ class FortgotPassword(Resource) :
     @ForgotPasswordFunc.expect(checkemail_model)
     def post(self) :
         '''Email로 비밀번호 변경 페이지를 전송'''
-        return ''
+        return '구현안함'
 api.add_namespace(ForgotPasswordFunc,'/forgot-password')

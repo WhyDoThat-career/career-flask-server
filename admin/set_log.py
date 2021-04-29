@@ -22,8 +22,6 @@ class KafkaLoggingHandler(logging.Handler) :
         try :
             msg = self.format(record)
             json_msg = json.loads(msg)
-            print('@'*20)
-            print(json_msg['Message'].replace("\'","\""))
             json_msg['Message'] = json.loads(json_msg['Message'].replace("\'","\""))
             json_msg = json.dumps(json_msg,ensure_ascii=False)
             self.producer.send(self.topic,json_msg)

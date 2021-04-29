@@ -54,18 +54,6 @@ class User(db.Model) :
     def is_anonymous(self):
         return False
 
-    @property
-    def get_data(self):
-        dictionary = self.__dict__
-        try :
-            del dictionary['_sa_instance_state']
-            del dictionary['password']
-            del dictionary['auth']
-            dictionary['id'] = self.id.hex
-        except :
-            pass
-        return dictionary
-
     def get_id(self):
         return self.id
 

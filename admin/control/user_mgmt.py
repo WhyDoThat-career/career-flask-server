@@ -16,7 +16,11 @@ def get_user() :
         send_data = '알 수 없는 사용자'
     else :
         success = True
-        send_data = current_user.get_data
+        send_data = dict()
+        send_data['email'] = current_user.email
+        send_data['nickname'] = current_user.nickname
+        send_data['thumbnail'] = current_user.thumbnail
+        
     print(str(datetime.datetime.now()))
     send_time = str(datetime.datetime.now())
     response_data = {
