@@ -5,6 +5,36 @@ from flask_login import current_user
 from flask.logging import default_handler
 from collections import OrderedDict
 from jsonformatter import JsonFormatter
+from kafka import KafkaProducer
+
+class KafkaLoggingHandler(logging.Handler) :
+    def __init__(self,hostlist,topic,tls=None) :
+        logging.Handler.__init__(self)
+        self.producer = KafkaProducer(acks=0, 
+                         api_version=(2,3,0),
+                         bootstrap_servers=hostlist,
+                         value_serializer=lambda x: x.encode('utf-8')
+                         )
+        self.topic = topic
+    def emit(self,record) :
+        if 'kafka.' in record.name :
+            return
+        try :
+            msg = self.format(record)
+            self.producer.send(self.topic,msg)
+            self.flush(timeout=1.0)
+        except :
+            logging.Handler.handleError(self, record)
+    def flush(self, timeout=None) :
+        self.producer.flush(timeout=timeout)
+    def close(self) :
+        self.acquire()
+        try:
+            if self.producer:
+                self.producer.close()
+            logging.Handler.close(self)
+        finally:
+            self.release()
 
 RECORD_CUSTOM_ATTRS = {
     # no parameters
@@ -38,14 +68,11 @@ formatter = JsonFormatter(
     record_custom_attrs=RECORD_CUSTOM_ATTRS,
     ensure_ascii=False
 )
+
+kafka_handler = KafkaLoggingHandler(["52.78.62.228:9092"],topic='test_topic')
+
 default_handler.setFormatter(formatter)
+kafka_handler.setFormatter(formatter)
 app.logger.setLevel(logging.INFO)
-# gunicorn_error_handlers = logging.getLogger('gunicorn.error').handlers
-# app.logger.handlers.extend(gunicorn_error_handlers)
-app.logger.info('my info')
-app.logger.debug('debug message')
-app.logger.warning('warning message')
-app.logger.info('my info')
-app.logger.info('my info')
-app.logger.warning('warning message')
-app.logger.warning('warning message')
+app.logger.addHandler(kafka_handler)
+app.logger.info('Flask server open')
