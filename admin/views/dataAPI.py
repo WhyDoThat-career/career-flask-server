@@ -60,6 +60,6 @@ class GetActiveLog(Resource) :
     def post(self) :
         '''특정 활동의 로그를 보고하는 API 입니다.'''
         log_data = request.get_json()
-        app.logger.info(json.dumps(log_data))
+        app.logger.info(log_data)
         return 200,'Data saved'
 api.add_namespace(ActiveFunc,'/active_log')

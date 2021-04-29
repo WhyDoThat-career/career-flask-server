@@ -25,7 +25,7 @@ def get_user() :
         'is_active' : success,
         'data' : send_data
     }
-    app.logger.info(json.dumps(response_data))
+    app.logger.info(response_data)
     return response_data
 
 def register_social_connection(id,name,user_id) :
@@ -56,7 +56,7 @@ def register_resume(user_info,main_flag,resume_data={'title':'제목 없음'}) :
 
     db.session.add(resume)
     db.session.commit()
-    app.logger.info(f"register resume {user_info[0]}")
+    app.logger.info(f"Register resume {user_info[0]}")
 
 def registerUser(social=False,data=None):
     user = User()

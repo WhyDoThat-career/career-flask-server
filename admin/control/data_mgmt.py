@@ -49,7 +49,7 @@ def get_data(selector) :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     } 
-    app.logger.info(json.dumps(response_data))
+    app.logger.info(response_data)
     return response_data
 
 def get_sector() :
@@ -63,7 +63,7 @@ def get_sector() :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     }
-    app.logger.info(json.dumps(response_data))
+    app.logger.info(response_data)
     return response_data
 
 def get_skills() :
@@ -77,7 +77,7 @@ def get_skills() :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     }
-    app.logger.info(json.dumps(response_data))
+    app.logger.info(response_data)
     return response_data
 
 def get_company_data(company_name) :
@@ -96,7 +96,7 @@ def get_company_data(company_name) :
         'success' : success,
         'data' : send_data
     }
-    app.logger.info(json.dumps(response_data))
+    app.logger.info(response_data)
     return response_data
 
 def get_resume(user_id) :
