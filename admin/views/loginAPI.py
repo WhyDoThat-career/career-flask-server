@@ -46,7 +46,7 @@ LogoutFunc = Namespace('Other')
 class Logout(Resource) :
     def get(self) :
         '''로그아웃 API'''
-        app.logger.info('Logout')
+        app.logger.info(json.dumps({'info':'Logout'}))
         logout_user()
         return redirect(url_for("login"))
 api.add_namespace(LogoutFunc,'/logout')

@@ -1,4 +1,4 @@
-import logging
+import logging, json
 from flask import has_request_context,request
 from admin import app
 from flask_login import current_user
@@ -21,7 +21,12 @@ class KafkaLoggingHandler(logging.Handler) :
             return
         try :
             msg = self.format(record)
-            self.producer.send(self.topic,msg)
+            json_msg = json.loads(msg)
+            print('@'*20)
+            print(json_msg['Message'].replace("\'","\""))
+            json_msg['Message'] = json.loads(json_msg['Message'].replace("\'","\""))
+            json_msg = json.dumps(json_msg,ensure_ascii=False)
+            self.producer.send(self.topic,json_msg)
             self.flush(timeout=1.0)
         except :
             logging.Handler.handleError(self, record)
@@ -69,10 +74,10 @@ formatter = JsonFormatter(
     ensure_ascii=False
 )
 
-kafka_handler = KafkaLoggingHandler(["52.78.62.228:9092"],topic='test_topic')
+kafka_handler = KafkaLoggingHandler(["52.78.62.228:9092"],topic='flask_all_logs')
 
 default_handler.setFormatter(formatter)
 kafka_handler.setFormatter(formatter)
 app.logger.setLevel(logging.INFO)
 app.logger.addHandler(kafka_handler)
-app.logger.info('Flask server open')
+app.logger.info(json.dumps({'info':'Flask server open'}))
