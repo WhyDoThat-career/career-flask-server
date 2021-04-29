@@ -19,3 +19,4 @@ gunicorn
 oauthlib
 requests
 boto3
+jsonformatter

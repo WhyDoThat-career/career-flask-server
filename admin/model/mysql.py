@@ -18,6 +18,7 @@ class Resume(db.Model) :
         dictionary = self.__dict__
         try :
             del dictionary['_sa_instance_state']
+            dictionary['user_id'] = self.user_id.hex
         except :
             pass
         return dictionary

@@ -3,9 +3,12 @@ from flask import request, redirect, url_for, session,abort
 from admin.control import user_mgmt,data_mgmt
 from flask_login import current_user
 from flask_restx import Namespace,Resource
+import json
+from admin.model.swagger import active_model
 
 UserFunc = Namespace('User Data',description='유저 관련 데이터 API')
 DataFunc = Namespace('Job Data',description='공고 및 기업 관련 데이터 API')
+ActiveFunc = Namespace('Active log',description='유저 활동 log 저장을 위한 API')
 
 @UserFunc.route('')
 class UserData(Resource) :
@@ -50,3 +53,13 @@ class GetSkills(Resource) :
         '''자주언급 되는 상위 300개 기술스택 API'''
         return data_mgmt.get_skills()
 api.add_namespace(DataFunc,'/getdata')
+
+@ActiveFunc.route('')
+class GetActiveLog(Resource) :
+    @ActiveFunc.expect(active_model)
+    def post(self) :
+        '''특정 활동의 로그를 보고하는 API 입니다.'''
+        log_data = request.get_json()
+        app.logger.info(json.dumps(log_data))
+        return 200,'Data saved'
+api.add_namespace(ActiveFunc,'/active_log')

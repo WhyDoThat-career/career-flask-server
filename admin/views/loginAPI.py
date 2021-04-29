@@ -3,7 +3,7 @@ from flask import request, redirect, url_for, session
 from admin.control import user_mgmt
 from flask_login import logout_user
 from flask_restx import Namespace,Resource
-from admin.model.swagger import *
+from admin.model.swagger import checkemail_model,login_model,register_model
 
 LoginFunc = Namespace('Login',description='로그인을 위한 API')
 CheckFunc = Namespace('Check',description='이메일, 비밀번호 체크 API')
@@ -46,6 +46,7 @@ LogoutFunc = Namespace('Other')
 class Logout(Resource) :
     def get(self) :
         '''로그아웃 API'''
+        app.logger.info('Logout')
         logout_user()
         return redirect(url_for("login"))
 api.add_namespace(LogoutFunc,'/logout')

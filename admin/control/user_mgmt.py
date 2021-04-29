@@ -25,6 +25,7 @@ def get_user() :
         'is_active' : success,
         'data' : send_data
     }
+    app.logger.info(json.dumps(response_data))
     return response_data
 
 def register_social_connection(id,name,user_id) :
@@ -35,7 +36,7 @@ def register_social_connection(id,name,user_id) :
 
     db.session.add(social)
     db.session.commit()
-    print("[Notice]Social connection Done")
+    app.logger.info(f"soial_connection {name}")
 
 def register_mongo_resume(user_info,resume_data) :
     resume_db = ResumeMongo.conn_mongodb('resume')
@@ -55,7 +56,7 @@ def register_resume(user_info,main_flag,resume_data={'title':'제목 없음'}) :
 
     db.session.add(resume)
     db.session.commit()
-    print("[Notice]Resume Resister Done")
+    app.logger.info(f"register resume {user_info[0]}")
 
 def registerUser(social=False,data=None):
     user = User()
@@ -82,8 +83,9 @@ def registerUser(social=False,data=None):
         main_flag = True)
     
     db.session.commit()
-    print("[Notice]User Resister Done")
     login_user(user)
+    app.logger.info("Resister")
+    app.logger.info("Login")
 
 def checkloginpassword():
     email = request.get_json()["email"]
@@ -91,6 +93,7 @@ def checkloginpassword():
     password = request.get_json()["password"]
     if check_password_hash(user.password,password) :
         login_user(user,remember=True, duration=datetime.timedelta(days=30))
+        app.logger.info("Login")
         return True
     else:
         return False
@@ -137,12 +140,14 @@ def social_login(social_data,platform) :
     if connection_check is not None :
         user = db.session.query(User).filter_by(id=connection_check.user_id).first()
         login_user(user)
+        app.logger.info("Login")
     
     elif connection_check is None :
         user = db.session.query(User).filter_by(email=social_data['user_email']).first()
         if user is not None :
-            register_social_connection(social_data['unique_id'],platform,user.id)
             login_user(user)
+            register_social_connection(social_data['unique_id'],platform,user.id)
+            app.logger.info("Login")
         elif user is None :
             user_data = dict()
             user_data['email'] = social_data['user_email']
