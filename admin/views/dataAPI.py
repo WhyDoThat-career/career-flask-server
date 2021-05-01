@@ -2,12 +2,12 @@ from admin import app, api
 from flask import request, redirect, url_for, session,abort
 from admin.control import user_mgmt,data_mgmt
 from flask_login import current_user
-from flask_restx import Namespace,Resource
+from flask_restx import Namespace,Resource,fields
 import json
 from admin.model.swagger import active_model
 
 UserFunc = Namespace('User Data',description='유저 관련 데이터 API')
-DataFunc = Namespace('Job Data',description='공고 및 기업 관련 데이터 API')
+DataFunc = Namespace('Job Data',description='공고 및 기업 관련 데이터 베이스 접근 API')
 ActiveFunc = Namespace('Active log',description='유저 활동 log 저장을 위한 API')
 
 @UserFunc.route('')
@@ -26,12 +26,28 @@ class UserResume(Resource) :
             return abort(404)
 api.add_namespace(UserFunc,'/getuser')
 
+@DataFunc.route('')
+class Search(Resource) :
+    @DataFunc.doc(params={
+        'search' : fields.String(required=True,
+                                 description='검색할 내용 쿼리 (ex. ?search=\"react\")'),
+        'page' : fields.Integer(required=False,
+                                description='페이지 요청 (ex. ?page=3), default=1'),
+        'per_page' : fields.Integer(require=True,
+                                    description='데이터 표시개수 요청 (ex. ?per_page=40), default=20')
+        })
+        def get(self) :
+            '''검색창에서 보낼 쿼리, 아직 개발중임'''
+            return ''
+
 @DataFunc.route('/<selector>')
 class GetData(Resource) :
     @DataFunc.doc(params={
         'selector': '→플랫폼이름 (ex. wanted,naver)\n→회사 규모 (ex. smallcompany, bigcompany)',
-        'page' : '페이지 요청 (ex. ?page=3), default=1',
-        'per_page' : '데이터 표시개수 요청 (ex. ?per_page=40), default=20'
+        'page' : fields.Integer(required=False,
+                                description='페이지 요청 (ex. ?page=3), default=1'),
+        'per_page' : fields.Integer(require=True,
+                                    description='데이터 표시개수 요청 (ex. ?per_page=40), default=20')
         })
     def get(self, selector) :
         '''페이지에 표시되는 데이터 API'''
@@ -60,6 +76,7 @@ class GetActiveLog(Resource) :
     def post(self) :
         '''특정 활동의 로그를 보고하는 API 입니다.'''
         log_data = request.get_json()
-        app.logger.info(log_data)
+        log_data['user_id'] = current_user.id.hex
+        app.logger.info(json.dumps(log_data))
         return 'Data transfer success',200
 api.add_namespace(ActiveFunc,'/active_log')

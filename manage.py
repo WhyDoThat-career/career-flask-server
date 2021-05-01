@@ -2,6 +2,7 @@ from admin import app, db
 from flask_migrate import Migrate,MigrateCommand
 from flask_script import Manager
 import sqlalchemy_utils
+import boto3, os
 
 def downloadDirectoryFroms3(bucketName,remoteDirectoryName):
     s3_resource = boto3.resource('s3')
@@ -13,6 +14,7 @@ def downloadDirectoryFroms3(bucketName,remoteDirectoryName):
 
 # react app 빌드파일 업데이트
 downloadDirectoryFroms3('career-client','build')
+print('S3 Download complete!')
 
 migrate = Migrate(app,db)
 manager = Manager(app)
