@@ -20,12 +20,11 @@ babel = Babel(app)
 blueprint = Blueprint('api',__name__,url_prefix='/api')
 api = Api(blueprint,doc='/doc/',title = 'WhyDoThat API 문서',description = '모든 API 호출은 /api/~ 로 시작합니다.')
 app.register_blueprint(blueprint)
-
 CORS(app,resources={
     r'*':{'origins':'*',
           'methods' : '*',
           'allow-headers':'*',
-          'supports_credentials':True
+        #   'supports_credentials':True
           }
     })
 
