@@ -67,7 +67,7 @@ def registerUser(social=False,data=None):
     if social :
         user_data = data
     else :
-        user_data = request.get_json()
+        user_data = request.get_json(force=True)
         user_data["password"] = generate_password_hash(user_data["password"])
         user_data["confirmpassword"] = generate_password_hash(user_data["confirmpassword"])
 
@@ -92,9 +92,9 @@ def registerUser(social=False,data=None):
     app.logger.info(json.dumps({'info':"Login"}))
 
 def checkloginpassword():
-    email = request.get_json()["email"]
+    email = request.get_json(force=True)["email"]
     user = db.session.query(User).filter_by(email=email).first()
-    password = request.get_json()["password"]
+    password = request.get_json(force=True)["password"]
     if check_password_hash(user.password,password) :
         login_user(user,remember=True, duration=datetime.timedelta(days=30))
         app.logger.info(json.dumps({'info':"Login"}))
