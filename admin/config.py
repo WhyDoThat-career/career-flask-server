@@ -1,5 +1,6 @@
 import json
 import pymongo
+from elasticsearch import Elasticsearch
 
 def load_key(key_file) :
     with open(key_file) as key_file :
@@ -30,3 +31,6 @@ JOB_SECTOR = ['Back-end','Front-end','WEB/Full-stack','Android','IOS',
               'Project-manager','Web-publisher','Security','Computer-vision',
               'Block-chain','Hardware','CTO','Unity/AR/VR/3D',
               'JAVA-dev','Anonymous','QA/QC','C#/C++/C','PHP-dev']
+
+es = load_key(key_file='./keys/aws_elastic_key.json')
+ELASTIC = Elasticsearch(f"http://{es['host']}:{es['port']}")

@@ -1,6 +1,6 @@
 from admin import app, api
 from flask import request, redirect, url_for, session,abort
-from admin.control import user_mgmt,data_mgmt
+from admin.control import user_mgmt,data_mgmt,search_mgmt
 from flask_login import current_user
 from flask_restx import Namespace,Resource,fields
 import json
@@ -8,6 +8,7 @@ from admin.model.swagger import active_model
 
 UserFunc = Namespace('User Data',description='유저 관련 데이터 API')
 DataFunc = Namespace('Job Data',description='공고 및 기업 관련 데이터 베이스 접근 API')
+SearchFunc = Namespace('Search Data',description='elasticsearch에 보내는 검색 API')
 ActiveFunc = Namespace('Active log',description='유저 활동 log 저장을 위한 API')
 
 @UserFunc.route('')
@@ -26,28 +27,33 @@ class UserResume(Resource) :
             return abort(404)
 api.add_namespace(UserFunc,'/getuser')
 
-@DataFunc.route('')
+@SearchFunc.route('')
 class Search(Resource) :
-    @DataFunc.doc(params={
-        'search' : fields.String(required=True,
-                                 description='검색할 내용 쿼리 (ex. ?search=\"react\")'),
-        'page' : fields.Integer(required=False,
-                                description='페이지 요청 (ex. ?page=3), default=1'),
-        'per_page' : fields.Integer(require=True,
-                                    description='데이터 표시개수 요청 (ex. ?per_page=40), default=20')
+    @SearchFunc.doc(params={
+        'term' :{'required':'true','type':'string',
+                    'description':'검색 내용 쿼리 (ex.?term=프론트엔드'},
+        'domain' : {'type':'string',
+                    'description':'검색 도메인 쿼리 defaualt=all(전체검색)\n- all\n- skill_tag : 스택으로만 검색\n - company_name : 기업명으로만 검색\n(ex. ?term=자바&domain=skill_tag)'},
+        'sort' :{'type':'string',
+                    'description':'정렬 선택 default=최신순\n- 최신순\n- 정확도순\n- 추천순(개발중)'},
+        'page' : {'type':'integer',
+                    'description':'페이지 요청 (ex. ?page=3), default=1'},
+        'per_page' : {'type':'integer',
+                    'description':'데이터 표시개수 요청 (ex. ?per_page=40), default=20'}
         })
-        def get(self) :
-            '''검색창에서 보낼 쿼리, 아직 개발중임'''
-            return ''
+    def get(self) :
+        '''검색창에서 보낼 쿼리'''
+        return search_mgmt.get_search_result()
+api.add_namespace(SearchFunc,'/search')
 
 @DataFunc.route('/<selector>')
 class GetData(Resource) :
     @DataFunc.doc(params={
-        'selector': '→플랫폼이름 (ex. wanted,naver)\n→회사 규모 (ex. smallcompany, bigcompany)',
-        'page' : fields.Integer(required=False,
-                                description='페이지 요청 (ex. ?page=3), default=1'),
-        'per_page' : fields.Integer(require=True,
-                                    description='데이터 표시개수 요청 (ex. ?per_page=40), default=20')
+        'selector': '가져올 데이터 영역 선택\n- 플랫폼이름 (ex. wanted,naver)\n- 회사 규모 (ex. smallcompany, bigcompany)',
+        'page' : {'type':'integer',
+                    'description':'페이지 요청 (ex. ?page=3), default=1'},
+        'per_page' : {'type':'integer',
+                    'description':'데이터 표시개수 요청 (ex. ?per_page=40), default=20'}
         })
     def get(self, selector) :
         '''페이지에 표시되는 데이터 API'''
