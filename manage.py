@@ -4,6 +4,8 @@ from flask_script import Manager
 import sqlalchemy_utils
 import boto3, os
 
+os.system('rm -rf build')
+
 def downloadDirectoryFroms3(bucketName,remoteDirectoryName):
     s3_resource = boto3.resource('s3')
     bucket = s3_resource.Bucket(bucketName) 
