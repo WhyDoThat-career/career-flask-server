@@ -23,8 +23,12 @@ class KafkaLoggingHandler(logging.Handler) :
             msg = self.format(record)
             json_msg = json.loads(msg)
             json_msg['Message'] = json.loads(json_msg['Message'].replace("\'","\""))
-            json_msg = json.dumps(json_msg,ensure_ascii=False)
-            self.producer.send(self.topic,json_msg)
+            if "activity" in json_msg['Message'] :
+                json_msg = json.dumps(json_msg,ensure_ascii=False)
+                self.producer.send(self.topic,json_msg,key='analys')
+            else :
+                json_msg = json.dumps(json_msg,ensure_ascii=False)
+                self.producer.send(self.topic,json_msg)
             self.flush(timeout=1.0)
         except :
             logging.Handler.handleError(self, record)
@@ -77,5 +81,5 @@ kafka_handler = KafkaLoggingHandler(["52.78.62.228:9092"],topic='flask_all_logs'
 default_handler.setFormatter(formatter)
 kafka_handler.setFormatter(formatter)
 app.logger.setLevel(logging.INFO)
-app.logger.addHandler(kafka_handler)
+# app.logger.addHandler(kafka_handler)
 app.logger.info(json.dumps({'info':'Flask server open'}))

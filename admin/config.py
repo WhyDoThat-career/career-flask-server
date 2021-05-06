@@ -5,7 +5,6 @@ from elasticsearch import Elasticsearch
 def load_key(key_file) :
     with open(key_file) as key_file :
         key = json.load(key_file)
-        print(key)
     return key
 
 FLASK_ADMIN_SWATCH = 'journal'
