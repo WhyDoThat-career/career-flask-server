@@ -85,24 +85,28 @@ class GetActiveLog(Resource) :
         active_data['user_id'] = current_user.id.hex
         if active_data['activity'] not in ['resume_sector','resume_skill','bookmark',
                                             'click','recruit_apply','filtering']:
-            return 'The data in the \"acitivty\" column is incorrect.', 400
+            app.logger.error(json.dumps(active_data))
+            return 'The data in the "acitivty" column is incorrect.', 400
         
         else :
             if (active_data['activity'] in ['resume_sector','resume_skill']
                     and 'resume_select' not in active_data) :
                 app.logger.error(json.dumps(active_data))
-                return 'Resume related data must have \"resume_select\" column', 400
+                return 'Resume related data must have "resume_select" column', 400
 
             elif (active_data['activity'] == 'filtering'
                     and 'filter_text' not in active_data) :
                 app.logger.error(json.dumps(active_data))
-                return 'Filtering data must have \"filter_text\" column', 400
+                return 'Filtering data must have "filter_text" column', 400
             
             elif (active_data['activity'] in ['bookmark','click','recruit_apply']
                     and 'recruit_id' not in active_data) :
                 app.logger.error(json.dumps(active_data))
-                return 'Recruit related data must have \"recruit_id\" column', 400
-
+                return 'Recruit related data must have "recruit_id" column', 400
+                
+            elif ('recruit_id' in active_data and type(active_data['recruit_id']) is not int) :
+                app.logger.error(json.dumps(active_data))
+                return '"recruit_id" column must be int type', 400
             else :
                 app.logger.info(json.dumps(active_data))
                 return 'Data transfer success',200
