@@ -81,8 +81,25 @@ class GetActiveLog(Resource) :
     @ActiveFunc.expect(active_model)
     def post(self) :
         '''특정 활동의 로그를 보고하는 API 입니다.'''
-        log_data = request.get_json()
-        log_data['user_id'] = current_user.id.hex
-        app.logger.info(json.dumps(log_data))
-        return 'Data transfer success',200
+        active_data = request.get_json()
+        active_data['user_id'] = current_user.id.hex
+
+        if (active_data['activity'] in ['resume_sector','resume_skill']
+                and 'resume_select' not in active_data :
+            app.logger.error(json.dumps(active_data))
+            return 'Resume related data must have \"resume_select\" column', 400
+
+        elif (active_data['activity'] == 'filtering'
+                and 'filter_text' not in active_data :
+            app.logger.error(json.dumps(active_data))
+            return 'Filtering data must have \"filter_text\" column', 400
+        
+        elif (active_data['activity'] in ['bookmark','click','recruit_apply']
+                and 'recruit_id' not in active_data :
+            app.logger.error(json.dumps(active_data))
+            return 'Recruit related data must have \"recruit_id\" column', 400
+
+        else :
+            app.logger.info(json.dumps(active_data))
+            return 'Data transfer success',200
 api.add_namespace(ActiveFunc,'/active_log')

@@ -76,7 +76,7 @@ def registerUser(social=False,data=None):
     user.nickname = user_data['nickname']
     user.password = user_data['password']
 
-    if user_data['thumbnail'] :
+    if 'thumbnail' in user_data :
         user.thumbnail = user_data['thumbnail']
 
     db.session.add(user)

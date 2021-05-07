@@ -23,12 +23,9 @@ class KafkaLoggingHandler(logging.Handler) :
             msg = self.format(record)
             json_msg = json.loads(msg)
             json_msg['Message'] = json.loads(json_msg['Message'].replace("\'","\""))
-            if "activity" in json_msg['Message'] :
-                json_msg = json.dumps(json_msg,ensure_ascii=False)
-                self.producer.send(self.topic,json_msg,key='analys')
-            else :
-                json_msg = json.dumps(json_msg,ensure_ascii=False)
-                self.producer.send(self.topic,json_msg)
+
+            json_msg = json.dumps(json_msg,ensure_ascii=False)
+            self.producer.send(self.topic,json_msg)
             self.flush(timeout=1.0)
         except :
             logging.Handler.handleError(self, record)
