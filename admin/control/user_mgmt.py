@@ -126,7 +126,7 @@ def registerAdmin():
 
         db.session.add(user)
 
-        if db.session.query(JobSector).all() is None :
+        if db.session.query(JobSector).first() is None :
             for sector_name in app.config['JOB_SECTOR'] :
                 sector = JobSector()
                 sector.name = sector_name

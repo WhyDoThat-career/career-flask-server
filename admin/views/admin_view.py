@@ -215,7 +215,7 @@ class IndexAdmin(admin.AdminIndexView) :
     def index(self):
         if request.method == "GET" :
             if not current_user.is_authenticated :
-                return redirect(url_for('login'))
+                return redirect(url_for('index'))
             elif current_user.is_anonymous :
                 return redirect(url_for('getout'))
             elif current_user.is_admin :
@@ -233,4 +233,4 @@ admin.add_view(sqla.ModelView(JobSkill,db.session))
 admin.add_view(sqla.ModelView(Resume,db.session,category='Other'))
 admin.add_sub_category(name="Links", parent_name="Other")
 admin.add_link(MenuLink(name='Back Home', url='/', category='Links'))
-admin.add_link(MenuLink(name='Logout', url='/logout', category='Links'))
+admin.add_link(MenuLink(name='Logout', url='/api/logout', category='Links'))
