@@ -11,6 +11,7 @@ from flask_migrate import Migrate,MigrateCommand
 from flask_script import Manager
 from oauthlib.oauth2 import WebApplicationClient
 from flask_restx import Api
+from flask_ipban import IpBan
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__, static_folder='../build/static',template_folder='./views/templates')
@@ -20,11 +21,15 @@ babel = Babel(app)
 blueprint = Blueprint('api',__name__,url_prefix='/api')
 api = Api(blueprint,doc='/doc/',title = 'WhyDoThat API 문서',description = '모든 API 호출은 /api/~ 로 시작합니다.')
 app.register_blueprint(blueprint)
+ip_ban = IpBan(ban_seconds=200)
+ip_ban.init_app(app)
+ip_ban.load_nuisances()
+ip_ban.url_pattern_add('/.env',match_type='string')
 CORS(app,resources={
     r'*':{'origins':'*',
           'methods' : '*',
           'allow-headers':'*',
-        #   'supports_credentials':True
+          'supports_credentials':True
           }
     })
 
@@ -63,9 +68,6 @@ def get_locale():
 init_login()
 
 @app.route('/')
-def default() :
-    return redirect('/index')
-
 @app.route('/index',methods=["GET","POST"])
 def index() :
     if request.method == "GET" :
