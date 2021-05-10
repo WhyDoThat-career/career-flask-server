@@ -1,7 +1,0 @@
-{
-    "name" : "elastic" ,
-    "host" : "3.37.20.112",
-    "port" : "9200",
-    "user" : "root",
-    "password" : "root"
-}
