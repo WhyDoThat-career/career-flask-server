@@ -24,6 +24,7 @@ app.register_blueprint(blueprint)
 ip_ban = IpBan(ban_seconds=200)
 ip_ban.init_app(app)
 ip_ban.load_nuisances()
+ip_ban.ip_whitelist_add('1.223.233.222')
 ip_ban.url_pattern_add('/.env',match_type='string')
 CORS(app,resources={
     r'*':{'origins':'*',
