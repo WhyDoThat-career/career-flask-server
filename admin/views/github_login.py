@@ -62,7 +62,7 @@ class GithubLoginCallback(Resource) :
             social_data['unique_id'] = userinfo_response.json()["id"]
             social_data['user_email'] = useremail_data["email"]
             social_data['user_name'] = userinfo_response.json()["login"]
-            social_data['user_name'] = userinfo_response.json()["avatar_url"]
+            social_data['thumbnail'] = userinfo_response.json()["avatar_url"]
         else:
             return "User email not available or not verified by Github.", 400
 

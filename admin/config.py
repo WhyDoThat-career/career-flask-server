@@ -9,7 +9,7 @@ def load_key(key_file) :
 
 FLASK_ADMIN_SWATCH = 'journal'
 
-flask_key = load_key(key_file,'./keys/flask_secret.json')
+flask_key = load_key(key_file='./keys/flask_secret.json')
 ADMIN_KEY = flask_key['admin_key']
 SECRET_KEY = flask_key['secret_key']
 GOOGLE_OAUTH = load_key('./keys/google_client_secret.json')

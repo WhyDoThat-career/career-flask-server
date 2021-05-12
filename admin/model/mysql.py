@@ -84,7 +84,8 @@ class JobDetail(db.Model) :
         dictionary = self.__dict__
         try :
             del dictionary['_sa_instance_state']
-            dictionary['deadline'] = str(dictionary['deadline'])
+            if dictionary['deadline'] != None :
+                dictionary['deadline'] = str(dictionary['deadline'])
             dictionary['crawl_date'] = str(dictionary['crawl_date'])
             dictionary['skill_tag'] = dictionary['skill_tag'].split(',')
         except :
