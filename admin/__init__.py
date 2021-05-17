@@ -68,9 +68,9 @@ def get_locale():
 
 init_login()
 
-@app.route('/')
-@app.route('/index',methods=["GET","POST"])
-def index() :
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path) :
     if request.method == "GET" :
         if not current_user.is_authenticated :
             return send_from_directory('../build','index.html')
