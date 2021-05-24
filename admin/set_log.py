@@ -78,5 +78,5 @@ kafka_handler = KafkaLoggingHandler(["52.78.62.228:9092"],topic='flask_all_logs'
 default_handler.setFormatter(formatter)
 kafka_handler.setFormatter(formatter)
 app.logger.setLevel(logging.INFO)
-# app.logger.addHandler(kafka_handler)
+app.logger.addHandler(kafka_handler)
 app.logger.info(json.dumps({'info':'Flask server open'}))
