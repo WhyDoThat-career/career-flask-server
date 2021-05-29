@@ -2,11 +2,10 @@ from admin import app,db
 from flask import request, session
 import flask_admin
 from flask_login import login_user,current_user
-from bson import json_util, ObjectId
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
-from admin.model.mysql import User,JobSector,Resume,Social
-from admin.model.mongodb import ResumeMongo
+from admin.model.mysql import User,JobSector,Social
+from admin.control import resume_mgmt
 import datetime
 from random import randint
 
@@ -42,27 +41,7 @@ def register_social_connection(id,name,user_id) :
     db.session.commit()
     app.logger.info(json.dumps({'info':f"soial_connection {name}"}))
 
-def register_mongo_resume(user_info,resume_data) :
-    resume_db = ResumeMongo.conn_mongodb('resume')
-    result = resume_db.insert_one({
-        'user_id' : user_info[0],
-        'user_email' : user_info[1],
-        'user_nickname' : user_info[2],
-        'resume' : resume_data
-    }).inserted_id
-    return str(result)
-
-def register_resume(user_info,main_flag,resume_data={'title':'제목 없음'}) :
-    resume = Resume()
-    resume.main_flag = main_flag
-    resume.mongo_key = register_mongo_resume(user_info,resume_data)
-    resume.user_id = user_info[0]
-
-    db.session.add(resume)
-    db.session.commit()
-    app.logger.info(json.dumps({'info':f"Register resume {user_info[0]}"}))
-
-def registerUser(social=False,data=None):
+def register_user(social=False,data=None):
     user = User()
     if social :
         user_data = data
@@ -82,7 +61,7 @@ def registerUser(social=False,data=None):
     db.session.add(user)
     db.session.flush()
 
-    register_resume(
+    resume_mgmt.register_resume(
         user_info = [user.id.hex,user.email,user.nickname],
         main_flag = True)
     
@@ -115,7 +94,7 @@ def checkemail():
         print('Not@')
         return "Not@"
 
-def registerAdmin():
+def register_admin():
     if db.session.query(User).filter_by(email='admin@admin').first() is None :
         user = User()
 
@@ -158,5 +137,5 @@ def social_login(social_data,platform) :
             user_data['nickname'] = social_data['user_name']
             user_data['password'] = str(randint(100000,999999))
             user_data['thumbnail'] = social_data['thumbnail']
-            registerUser(social=True,data=user_data)
+            register_user(social=True,data=user_data)
             register_social_connection(social_data['unique_id'],platform,current_user.id)

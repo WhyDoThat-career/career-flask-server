@@ -38,7 +38,7 @@ class Register(Resource) :
     @RegisterFunc.expect(register_model)
     def post(self) :
         '''회원가입 동작을 한 후 로그인까지 진행됩니다.'''
-        user_mgmt.registerUser()
+        user_mgmt.register_user()
         return redirect(url_for('index'))
 api.add_namespace(RegisterFunc,'/register')
 

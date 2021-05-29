@@ -10,7 +10,7 @@ def register() :
     if request.method == "GET" :
         return render_template('register.html')
     elif request.method == "POST" :
-        user_mgmt.registerUser()
+        user_mgmt.register_user()
         return redirect(url_for('login'))
 
 @app.route('/checkemail', methods=["POST"])
@@ -45,7 +45,7 @@ def forgotpassword():
 def get_resume():
     if current_user.is_active :
         user_id = current_user.get_id().hex
-        return data_mgmt.get_resume(user_id)
+        return user_mgmt.get_resume(user_id)
     else :
         return abort(404)
 
@@ -69,11 +69,11 @@ def getDataSkills():
     if request.method == "GET" :
         return data_mgmt.get_skills()
 
-@app.route('/getout',methods=["GET"])
+@app.route('/getout_origin',methods=["GET"])
 def getout():
     return render_template('error-admin.html'),401
 
-@app.route('/notfound',methods=["GET"])
+@app.route('/notfound_orgin',methods=["GET"])
 def page_not_found():
     return render_template('404.html'),404
 
