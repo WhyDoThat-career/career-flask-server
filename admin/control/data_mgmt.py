@@ -2,7 +2,6 @@ from admin import app,db
 from flask import request, session
 import flask_admin
 from flask_login import login_user
-from bson import ObjectId
 import json
 from admin.model.mysql import User,JobDetail,JobSector,CompanyInfo,Resume,JobSkill
 from admin.model.mongodb import ResumeMongo
@@ -49,6 +48,7 @@ def get_data(selector) :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     } 
+    json.dumps({'info':f'Send Data list From {selector}'})
     return response_data
 
 def get_sector() :
@@ -62,7 +62,7 @@ def get_sector() :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     }
-    app.logger.info(json.dumps(response_data,ensure_ascii=False))
+    app.logger.info(json.dumps({'info':'Send Sector list'}))
     return response_data
 
 def get_skills() :
@@ -76,7 +76,7 @@ def get_skills() :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     }
-    app.logger.info(json.dumps(response_data,ensure_ascii=False))
+    app.logger.info(json.dumps({'info':'Send Skill list'}))
     return response_data
 
 def get_company_data(company_name) :
@@ -95,24 +95,20 @@ def get_company_data(company_name) :
         'success' : success,
         'data' : send_data
     }
-    app.logger.info(json.dumps(response_data,ensure_ascii=False))
+    app.logger.info(json.dumps({'info':'Send Company Data'}))
     return response_data
 
-def get_resume(user_id) :
-    data = db.session.query(Resume).filter_by(user_id=user_id).all()
+def search_recommend_data(recommend_list) :
+    data = db.session.query(JobDetail).filter(JobDetail.id.in_(recommend_list)).all()
     data_dict = [cl.get_data for cl in data]
     print(str(datetime.datetime.now()))
     send_time = str(datetime.datetime.now())
-    for index,item in enumerate(data) :
-        resume_db = ResumeMongo.conn_mongodb('resume')
-        result = resume_db.find_one({"_id":ObjectId(item.mongo_key)})
-        data_dict[index]['resume'] = result['resume']
 
     response_data = {
-        'db_name' : 'Resume',
+        'db_name' : 'JobDetail',
         'send_time' : send_time,
         'data_length': len(data),
         'data' : data_dict,
     }
-    app.logger.info(json.dumps(response_data,ensure_ascii=False))
+    app.logger.info(json.dumps({'info':'Send Recommand list'}))
     return response_data

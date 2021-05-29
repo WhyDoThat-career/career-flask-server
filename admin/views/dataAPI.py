@@ -1,15 +1,17 @@
 from admin import app, api
 from flask import request, redirect, url_for, session,abort
-from admin.control import user_mgmt,data_mgmt,search_mgmt
+from admin.control import user_mgmt,data_mgmt,search_mgmt,resume_mgmt
 from flask_login import current_user
 from flask_restx import Namespace,Resource,fields
 import json
-from admin.model.swagger import active_model
+from admin.model.swagger import active_model,resume_update_model,resume_delete_model
+import requests
 
 UserFunc = Namespace('User Data',description='유저 관련 데이터 API')
 DataFunc = Namespace('Job Data',description='공고 및 기업 관련 데이터 베이스 접근 API')
 SearchFunc = Namespace('Search Data',description='elasticsearch에 보내는 검색 API')
 ActiveFunc = Namespace('Active log',description='유저 활동 log 저장을 위한 API')
+RecommendFunc = Namespace('Recommend',description='현재 로그인한 유저의 추천 목록을 받아오는 API')
 
 @UserFunc.route('')
 class UserData(Resource) :
@@ -22,7 +24,30 @@ class UserResume(Resource) :
         '''현재 로그인중인 유저의 이력서목록 API'''
         if current_user.is_active :
             user_id = current_user.get_id().hex
-            return data_mgmt.get_resume(user_id)
+            return resume_mgmt.get_resume(user_id)
+        else :
+            return abort(404)
+    def post(self) :
+        '''현재 로그인한 유저의 이력서 생성 API'''
+        if current_user.is_active :
+            user_info =  [current_user.id.hex,current_user.email,current_user.nickname]
+            return resume_mgmt.register_resume(user_info,main_flag=False)
+        else :
+            return abort(404)
+    @UserFunc.expect(resume_update_model)
+    def put(self) :
+        '''현재 로그인한 유저의 이력서 업데이트 API'''
+        if current_user.is_active :
+            resume_data = request.get_json(force=True)
+            return resume_mgmt.update_resume(resume_data,main_flag=False)
+        else :
+            return abort(404)
+    @UserFunc.expect(resume_delete_model)
+    def delete(self) :
+        '''현재 로그인한 유저의 이력서 삭제 API'''
+        if current_user.is_active :
+            resume_id = request.get_json(force=True)['id']
+            return resume_mgmt.delete_resume(resume_id)
         else :
             return abort(404)
 api.add_namespace(UserFunc,'/getuser')
@@ -111,3 +136,15 @@ class GetActiveLog(Resource) :
                 app.logger.info(json.dumps(active_data))
                 return 'Data transfer success',200
 api.add_namespace(ActiveFunc,'/active_log')
+
+@RecommendFunc.route('')
+class GetRecommend(Resource) :
+    def get(self) :
+        try :
+            recommend_list = requests.get(
+                f'http://3.35.128.224:8080/recommend?user_id={current_user.id.hex}').json()
+            return data_mgmt.search_recommend_data(recommend_list['recommend'])
+        except :
+            return '로그인을 해야만 추천받을 수 있습니다.'
+
+api.add_namespace(RecommendFunc,'/recommend')
