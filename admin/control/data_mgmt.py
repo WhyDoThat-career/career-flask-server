@@ -18,9 +18,14 @@ def create_query(selector,page,per_page) :
                     .filter_by(big_company=1)
                     .order_by(JobDetail.crawl_date.desc())
                     .paginate(page,per_page=per_page,error_out=True))
-    else :
+    elif selector in ['wanted','roketpunch','programmers','naver','kakao'] :
         return (db.session.query(JobDetail)
                     .filter_by(platform=selector)
+                    .order_by(JobDetail.crawl_date.desc())
+                    .paginate(page,per_page=per_page,error_out=True))
+    else :
+        return (db.session.query(JobDetail)
+                    .filter_by(sector=selector)
                     .order_by(JobDetail.crawl_date.desc())
                     .paginate(page,per_page=per_page,error_out=True))
 

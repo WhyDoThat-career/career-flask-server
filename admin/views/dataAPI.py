@@ -74,7 +74,7 @@ api.add_namespace(SearchFunc,'/search')
 @DataFunc.route('/<selector>')
 class GetData(Resource) :
     @DataFunc.doc(params={
-        'selector': '가져올 데이터 영역 선택\n- 플랫폼이름 (ex. wanted,naver)\n- 회사 규모 (ex. smallcompany, bigcompany)',
+        'selector': '가져올 데이터 영역 선택\n- 플랫폼이름 (ex. wanted,naver)\n- 회사 규모 (ex. smallcompany, bigcompany)\n- 기술 직군 -> `/getdata/sector`에서 목록을 받아 해당 이름에 맞게 요청 (ex. Front-end, Back-end)',
         'page' : {'type':'integer',
                     'description':'페이지 요청 (ex. ?page=3), default=1'},
         'per_page' : {'type':'integer',
@@ -99,6 +99,7 @@ class GetSkills(Resource) :
     def get(self) :
         '''자주언급 되는 상위 300개 기술스택 API'''
         return data_mgmt.get_skills()
+
 api.add_namespace(DataFunc,'/getdata')
 
 @ActiveFunc.route('')
@@ -142,7 +143,7 @@ class GetRecommend(Resource) :
     def get(self) :
         try :
             recommend_list = requests.get(
-                f'http://3.35.128.224:8080/recommend?user_id={current_user.id.hex}').json()
+                f'http://3.35.128.224:8080/recommend?user_id=26295c795dc548119c298dbd2e185fe4').json()
             return data_mgmt.search_recommend_data(recommend_list['recommend'])
         except :
             return '로그인을 해야만 추천받을 수 있습니다.'
