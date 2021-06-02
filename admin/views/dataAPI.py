@@ -107,7 +107,7 @@ class GetActiveLog(Resource) :
     @ActiveFunc.expect(active_model)
     def post(self) :
         '''특정 활동의 로그를 보고하는 API 입니다.'''
-        active_data = request.get_json()
+        active_data = request.get_json(force=True)
         active_data['user_id'] = current_user.id.hex
         if active_data['activity'] not in ['resume_sector','resume_skill','bookmark',
                                             'click','recruit_apply','filtering']:
@@ -143,7 +143,7 @@ class GetRecommend(Resource) :
     def get(self) :
         try :
             recommend_list = requests.get(
-                f'http://3.35.128.224:8080/recommend?user_id=26295c795dc548119c298dbd2e185fe4').json()
+                f'http://3.35.128.224:8080/recommend?user_id={current_user.id.hex}').json()
             return data_mgmt.search_recommend_data(recommend_list['recommend'])
         except :
             return '로그인을 해야만 추천받을 수 있습니다.'

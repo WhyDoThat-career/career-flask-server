@@ -7,8 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_babelex import Babel
 from flask_cors import CORS
 from flask_login import LoginManager,current_user
-from flask_migrate import Migrate,MigrateCommand
-from flask_script import Manager
 from oauthlib.oauth2 import WebApplicationClient
 from flask_restx import Api
 from flask_ipban import IpBan
@@ -85,5 +83,4 @@ import admin.views.loginAPI
 import admin.views.dataAPI
 import admin.views.google_login
 import admin.views.github_login
-import admin.views.restAPI_orgin
 import admin.set_log
