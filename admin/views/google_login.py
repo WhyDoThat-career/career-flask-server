@@ -28,7 +28,7 @@ class GoogleLogin(Resource) :
             )
             return redirect(request_uri)
         else :
-            return redirect('/')
+            return redirect('http://whydothat.net',code=302)
 
 @LoginFunc.route("/google/callback")
 @LoginFunc.hide
@@ -68,4 +68,4 @@ class GoogleLoginCallback(Resource) :
             return "User email not available or not verified by Google.", 400
 
         user_mgmt.social_login(social_data,platform='google')
-        return redirect('/')
+        return redirect('http://whydothat.net',code=302)
