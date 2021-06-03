@@ -141,11 +141,14 @@ api.add_namespace(ActiveFunc,'/active_log')
 @RecommendFunc.route('')
 class GetRecommend(Resource) :
     def get(self) :
-        try :
-            recommend_list = requests.get(
-                f'http://3.35.128.224:8080/recommend?user_id={current_user.id.hex}').json()
-            return data_mgmt.search_recommend_data(recommend_list['recommend'])
-        except :
-            return '로그인을 해야만 추천받을 수 있습니다.'
+        with open('./admin/views/test.json') as key_file :
+            key = json.load(key_file)
+        return key
+        # try :
+        #     recommend_list = requests.get(
+        #         f'http://3.35.128.224:8080/recommend?user_id={current_user.id.hex}').json()
+        #     return data_mgmt.search_recommend_data(recommend_list['recommend'])
+        # except :
+        #     return '로그인을 해야만 추천받을 수 있습니다.'
 
 api.add_namespace(RecommendFunc,'/recommend')

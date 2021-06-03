@@ -215,13 +215,13 @@ class IndexAdmin(admin.AdminIndexView) :
     def index(self):
         if request.method == "GET" :
             if not current_user.is_authenticated :
-                return redirect(url_for('index'))
+                return redirect('/')
             elif current_user.is_anonymous :
-                return redirect(url_for('getout'))
+                return redirect('/')
             elif current_user.is_admin :
                 return self.render('index.html')
             else :
-                return redirect(url_for('getout'))
+                return redirect('/')
 
 admin = admin.Admin(app,index_view=IndexAdmin(), name ='WhyDoThat Admin page', template_mode='bootstrap4')
 

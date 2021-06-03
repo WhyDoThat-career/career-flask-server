@@ -39,7 +39,7 @@ class Register(Resource) :
     def post(self) :
         '''회원가입 동작을 한 후 로그인까지 진행됩니다.'''
         user_mgmt.register_user()
-        return redirect(url_for('index'))
+        return redirect('/')
 api.add_namespace(RegisterFunc,'/register')
 
 LogoutFunc = Namespace('Other')
@@ -49,7 +49,7 @@ class Logout(Resource) :
         '''로그아웃 API'''
         app.logger.info(json.dumps({'info':'Logout'}))
         logout_user()
-        return redirect(url_for('index'))
+        return redirect('/')
 api.add_namespace(LogoutFunc,'/logout')
 
 ForgotPasswordFunc = Namespace('Other')

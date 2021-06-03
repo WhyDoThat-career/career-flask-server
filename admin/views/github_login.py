@@ -19,7 +19,7 @@ class GithubLogin(Resource) :
             )
             return redirect(request_uri)
         else :
-            return redirect(url_for('index'))
+            return redirect('/')
 
 @LoginFunc.route("/github/callback")
 @LoginFunc.hide
@@ -67,4 +67,4 @@ class GithubLoginCallback(Resource) :
             return "User email not available or not verified by Github.", 400
 
         user_mgmt.social_login(social_data,platform='github')
-        return redirect(url_for('index'))
+        return redirect('/')
