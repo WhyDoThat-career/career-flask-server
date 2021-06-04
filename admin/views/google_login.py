@@ -23,12 +23,12 @@ class GoogleLogin(Resource) :
             # scopes that let you retrieve user's profile from Google
             request_uri = google_client.prepare_request_uri(
                 authorization_endpoint,
-                redirect_uri=request.base_url + "/callback",
+                redirect_uri=request.base_url.replace('http','https') + "/callback",
                 scope=["openid", "email", "profile"],
             )
             return redirect(request_uri)
         else :
-            return redirect('http://whydothat.net',code=302)
+            return redirect(url_for('index'))
 
 @LoginFunc.route("/google/callback")
 @LoginFunc.hide
@@ -41,7 +41,7 @@ class GoogleLoginCallback(Resource) :
         token_url, headers, body = google_client.prepare_token_request(
             token_endpoint,
             authorization_response=request.url,
-            redirect_url=request.base_url,
+            redirect_url=request.base_url.replace('http','https'),
             code=code
         )
         token_response = requests.post(
@@ -68,4 +68,4 @@ class GoogleLoginCallback(Resource) :
             return "User email not available or not verified by Google.", 400
 
         user_mgmt.social_login(social_data,platform='google')
-        return redirect('http://whydothat.net',code=302)
+        return redirect(url_for('index'))

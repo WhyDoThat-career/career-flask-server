@@ -14,12 +14,12 @@ class GithubLogin(Resource) :
         if not current_user.is_authenticated :
             request_uri = github_client.prepare_request_uri(
                 github_oauth['auth_uri'],
-                redirect_uri=request.base_url + "/callback",
+                redirect_uri=request.base_url.replace('http','https') + "/callback",
                 scope="user:email read:org read:user",
             )
             return redirect(request_uri)
         else :
-            return redirect('http://whydothat.net',code=302)
+            return redirect(url_for('index'))
 
 @LoginFunc.route("/github/callback")
 @LoginFunc.hide
@@ -31,7 +31,7 @@ class GithubLoginCallback(Resource) :
         token_url, headers, body = github_client.prepare_token_request(
             token_endpoint,
             authorization_response=request.url,
-            redirect_url=request.base_url,
+            redirect_url=request.base_url.replace('http','https'),
             code=code
         )
 
@@ -67,4 +67,4 @@ class GithubLoginCallback(Resource) :
             return "User email not available or not verified by Github.", 400
 
         user_mgmt.social_login(social_data,platform='github')
-        return redirect('http://whydothat.net',code=302)
+        return redirect(url_for('index'))

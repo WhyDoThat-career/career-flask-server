@@ -12,15 +12,18 @@ from flask_restx import Api
 from flask_ipban import IpBan
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-app = Flask(__name__, static_folder='./static',template_folder='./views/templates')
+app = Flask(__name__, static_folder='../build/static',template_folder='./views/templates')
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 babel = Babel(app)
-api = Api(app,title = 'WhyDoThat API 문서',description = '모든 API 호출에 대해 정리한 문서 입니다.')
+blueprint = Blueprint('api',__name__,url_prefix='/api')
+api = Api(blueprint,doc='/doc/',title = 'WhyDoThat API 문서',description = '모든 API 호출에 대해 정리한 문서 입니다.')
+app.register_blueprint(blueprint)
 ip_ban = IpBan(ban_seconds=200)
 ip_ban.init_app(app)
 ip_ban.load_nuisances()
 ip_ban.ip_whitelist_add('1.223.233.222')
+ip_ban.ip_whitelist_add('172.18.0.4')
 ip_ban.url_pattern_add('/.env',match_type='string')
 CORS(app,resources={
     r'*':{'origins':'*',
@@ -63,6 +66,18 @@ def get_locale():
     return session.get('lang', 'ko')
 
 init_login()
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path) :
+    if request.method == "GET" :
+        if not current_user.is_authenticated :
+            return send_from_directory('../build','index.html')
+        else :
+            if current_user.is_admin :
+                return redirect('/admin')
+            else :
+                return send_from_directory('../build','index.html')
 
 import admin.views.admin_view
 import admin.views.loginAPI
