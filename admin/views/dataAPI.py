@@ -78,7 +78,9 @@ class GetData(Resource) :
         'page' : {'type':'integer',
                     'description':'페이지 요청 (ex. ?page=3), default=1'},
         'per_page' : {'type':'integer',
-                    'description':'데이터 표시개수 요청 (ex. ?per_page=40), default=20'}
+                    'description':'데이터 표시개수 요청 (ex. ?per_page=40), default=20'},
+        'newbie' : {'type':'integer',
+                    'description':'신입 여부, 필수 아님 (ex. 신입만-> ?newbie=1, 경력만-> ?newbie=0)'}
         })
     def get(self, selector) :
         '''페이지에 표시되는 데이터 API'''

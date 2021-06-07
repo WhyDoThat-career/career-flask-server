@@ -7,27 +7,49 @@ from admin.model.mysql import User,JobDetail,JobSector,CompanyInfo,Resume,JobSki
 from admin.model.mongodb import ResumeMongo
 import datetime
 
-def create_query(selector,page,per_page) :
-    if selector == 'smallcompany' :
-        return (db.session.query(JobDetail)
-                    .filter_by(big_company=0)
-                    .order_by(JobDetail.crawl_date.desc())
-                    .paginate(page,per_page=per_page,error_out=True))
-    elif selector == 'bigcompany' :
-        return (db.session.query(JobDetail)
-                    .filter_by(big_company=1)
-                    .order_by(JobDetail.crawl_date.desc())
-                    .paginate(page,per_page=per_page,error_out=True))
-    elif selector in ['wanted','roketpunch','programmers','naver','kakao'] :
-        return (db.session.query(JobDetail)
-                    .filter_by(platform=selector)
-                    .order_by(JobDetail.crawl_date.desc())
-                    .paginate(page,per_page=per_page,error_out=True))
+def create_query(selector,page,per_page,newbie) :
+    if newbie is None :
+        if selector == 'smallcompany' :
+            return (db.session.query(JobDetail)
+                        .filter_by(big_company=0)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
+        elif selector == 'bigcompany' :
+            return (db.session.query(JobDetail)
+                        .filter_by(big_company=1)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
+        elif selector in ['wanted','roketpunch','programmers','naver','kakao'] :
+            return (db.session.query(JobDetail)
+                        .filter_by(platform=selector)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
+        else :
+            return (db.session.query(JobDetail)
+                        .filter_by(sector=selector)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
     else :
-        return (db.session.query(JobDetail)
-                    .filter_by(sector=selector)
-                    .order_by(JobDetail.crawl_date.desc())
-                    .paginate(page,per_page=per_page,error_out=True))
+        if selector == 'smallcompany' :
+            return (db.session.query(JobDetail)
+                        .filter_by(big_company=0, newbie=newbie)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
+        elif selector == 'bigcompany' :
+            return (db.session.query(JobDetail)
+                        .filter_by(big_company=1, newbie=newbie)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
+        elif selector in ['wanted','roketpunch','programmers','naver','kakao'] :
+            return (db.session.query(JobDetail)
+                        .filter_by(platform=selector, newbie=newbie)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
+        else :
+            return (db.session.query(JobDetail)
+                        .filter_by(sector=selector, newbie=newbie)
+                        .order_by(JobDetail.crawl_date.desc())
+                        .paginate(page,per_page=per_page,error_out=True))
 
 def get_data(selector) :
     if request.args.get('page') :
@@ -38,8 +60,12 @@ def get_data(selector) :
         per_page = int(request.args.get('per_page'))
     else :
         per_page = 20
+    if request.args.get('newbie') :
+        newbie = int(request.args.get('newbie'))
+    else :
+        newbie = None
     
-    query = create_query(selector,page,per_page)
+    query = create_query(selector,page,per_page,newbie)
     data = query.items
 
     print(f'LOG: 데이터 길이 {len(data)}')
