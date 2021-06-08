@@ -9,14 +9,16 @@ def pagination(page,per_page):
         return page*per_page+1
 
 def make_query(domain,term,sort,page,per_page) :
+    # To Do : 토크나이저 setting 또는 ngram 이용해서 검색 쿼리 개선 필요
     if domain != 'all' and domain is not None :
         #string_query = f'{domain}:{term}'
-        bool_query = {'must':{'match':{domain:term}}}
+        bool_query = {'must':{'wildcard':{domain:f'*{term}*'}}}
     else :
         #string_query = f'title:{term} OR main_text:{term} OR skill_tag:{term}'
-        bool_query = {'should':[{'match':{'title':term}},
-                                {'match':{'main_text':term}},
-                                {'match':{'skill_tag':term}}],
+        bool_query = {'should':[{'wildcard':{'title':f'*{term}*'}},
+                                {'wildcard':{'main_text':f'*{term}*'}},
+                                {'wildcard':{'skill_tag':f'*{term}*'}},
+                                {'wildcard':{'company_name':f'*{term}*'}}],
                       'minimum_should_match':1}
     if sort == '정확도순' :
         sort_query = ['_score',{'crawl_date':{'order':'desc'}}]
@@ -52,12 +54,13 @@ def get_search_result():
                                    index='mysql-jobdetail*')
     last_page = int(search_result['hits']['total']['value']/per_page)
     send_time = str(datetime.datetime.now())
+    send_data = [hits['_source'] for hits in search_result['hits']['hits']]
     response_data = {
         'current_page_number': page+1,
         'last_page_number': last_page+1,
         'db_name' : 'JobDetail',
         'send_time' : send_time,
-        'data_length': per_page,
-        'data' : [hits['_source'] for hits in search_result['hits']['hits']],
+        'data_length': len(send_data),
+        'data' : send_data,
     } 
     return response_data
