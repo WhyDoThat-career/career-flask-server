@@ -10,6 +10,7 @@ def pagination(page,per_page):
 
 def make_query(domain,term,sort,page,per_page) :
     # To Do : 토크나이저 setting 또는 ngram 이용해서 검색 쿼리 개선 필요
+    term.replace(' ','*')
     if domain != 'all' and domain is not None :
         #string_query = f'{domain}:{term}'
         bool_query = {'must':{'wildcard':{domain:f'*{term}*'}}}
