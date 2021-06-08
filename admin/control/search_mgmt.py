@@ -20,10 +20,10 @@ def make_query(domain,term,sort,page,per_page) :
                                 {'wildcard':{'skill_tag':f'*{term}*'}},
                                 {'wildcard':{'company_name':f'*{term}*'}}],
                       'minimum_should_match':1}
-    if sort == '정확도순' :
-        sort_query = ['_score',{'crawl_date':{'order':'desc'}}]
-    else : 
+    if sort == '최신순' :
         sort_query = [{'crawl_date':{'order':'desc'}},'_score']
+    else : 
+        sort_query = ['_score',{'crawl_date':{'order':'desc'}}]
     es_query = {
             'from':pagination(page,per_page),
             'size':per_page,
