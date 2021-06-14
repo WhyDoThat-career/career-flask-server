@@ -69,6 +69,15 @@ class Search(Resource) :
     def get(self) :
         '''검색창에서 보낼 쿼리'''
         return search_mgmt.get_search_result()
+@SearchFunc.route('/auto_typing')
+class AutoTyping(Resource) :
+    @SearchFunc.doc(params={
+        'term' :{'required':'true','type':'string',
+                    'description':'검색 내용 쿼리 (ex.?term=프론트엔드'}
+    })
+    def get(self) :
+        '''자동 완성 쿼리'''
+        return search_mgmt.get_autotyping()
 api.add_namespace(SearchFunc,'/search')
 
 @DataFunc.route('/<selector>')

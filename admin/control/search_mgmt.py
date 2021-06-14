@@ -1,6 +1,8 @@
-from admin import app
+from admin import app, db
 from flask import request
+from admin.model.mysql import JobSkill,JobDetail
 import datetime
+Elastic = app.config['ELASTIC']
 
 def pagination(page,per_page):
     if page == 0 :
@@ -22,7 +24,7 @@ def make_query(domain,term,sort,page,per_page) :
                                 {'wildcard':{'company_name':f'*{term}*'}}],
                       'minimum_should_match':1}
     if sort == '최신순' :
-        sort_query = [{'crawl_date':{'order':'desc'}},'_score']
+        sort_query = [{'crawl_date':{'order':'desc'}}]
     else : 
         sort_query = ['_score',{'crawl_date':{'order':'desc'}}]
     es_query = {
@@ -36,8 +38,6 @@ def make_query(domain,term,sort,page,per_page) :
     return es_query
 
 def get_search_result():
-    Elastic = app.config['ELASTIC']
-
     Elastic.indices.refresh(index='mysql-jobdetail*')
     domain = request.args.get('domain')
     term = request.args.get('term')
@@ -63,5 +63,26 @@ def get_search_result():
         'send_time' : send_time,
         'data_length': len(send_data),
         'data' : send_data,
+    } 
+    return response_data
+
+def get_autotyping() :
+    term = request.args.get('term')
+    send_time = str(datetime.datetime.now())
+    company_name = db.session.query(JobDetail).filter(JobDetail.company_name.like(f'{term}%')).all()
+    if company_name == [] :
+        company_name = db.session.query(JobDetail).filter(JobDetail.company_name.like(f'%{term}%')).all()
+    skill_tag = db.session.query(JobSkill).filter(JobSkill.name.like(f'%{term}%')).all()
+
+    send_company_data = list(set([c.company_name for c in company_name]))
+    send_skill_tag_data = list(set([s.name for s in skill_tag]))
+    send_company_data.sort(key=lambda i:len(i))
+    send_skill_tag_data.sort(key=lambda i:len(i))
+
+    response_data = {
+        'db_name' : 'JobDetail',
+        'send_time' : send_time,
+        'company_result' : send_company_data[:3],
+        'skill_result' : send_skill_tag_data[:3]
     } 
     return response_data
