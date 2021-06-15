@@ -56,6 +56,11 @@ def get_search_result():
     last_page = int(search_result['hits']['total']['value']/per_page)
     send_time = str(datetime.datetime.now())
     send_data = [hits['_source'] for hits in search_result['hits']['hits']]
+
+    for index,item in enumerate(send_data) :
+        if item['skill_tag'] is not None :
+            send_data[index]['skill_tag'] = item['skill_tag'].split(',')
+
     response_data = {
         'current_page_number': page+1,
         'last_page_number': last_page+1,
