@@ -54,6 +54,7 @@ def register_user(social=False,data=None):
     user.email = user_data['email']
     user.nickname = user_data['nickname']
     user.password = user_data['password']
+    user.create_date = str(datetime.datetime.now())
 
     if 'thumbnail' in user_data :
         user.thumbnail = user_data['thumbnail']

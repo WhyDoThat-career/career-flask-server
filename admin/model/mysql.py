@@ -35,6 +35,7 @@ class User(db.Model) :
     email          = db.Column(EmailType, unique=True, nullable=False)
     nickname       = db.Column(db.String(100), nullable=False)
     thumbnail      = db.Column(URLType, default = '/static/img/wdticon.png')
+    create_date  = db.Column(db.DateTime)
     resume    = db.relationship('Resume')
 
     @property
