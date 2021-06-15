@@ -51,7 +51,21 @@ def create_query(selector,page,per_page,newbie) :
                         .order_by(JobDetail.crawl_date.desc())
                         .paginate(page,per_page=per_page,error_out=True))
 
-def get_data(selector) :
+def get_data() :
+    recruit_id = int(request.args.get('id'))
+    recruit = db.session.query(JobDetail).filter_by(id=recruit_id).first()
+    send_time = str(datetime.datetime.now())
+    response_data = {
+        'db_name' : 'JobDetail',
+        'send_time' : send_time,
+        'data' : recruit.get_data,
+    } 
+    app.logger.info(json.dumps({'info':f'Send Recruit id={recruit_id}'}))
+    return response_data
+
+
+
+def get_data_selector(selector) :
     if request.args.get('page') :
         page = int(request.args.get('page'))
     else :
@@ -79,7 +93,7 @@ def get_data(selector) :
         'data_length': len(data),
         'data' : [cl.get_data for cl in data],
     } 
-    json.dumps({'info':f'Send Data list From {selector}'})
+    app.logger.info(json.dumps({'info':f'Send Data list From {selector}'}))
     return response_data
 
 def get_sector() :

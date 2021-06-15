@@ -79,9 +79,17 @@ class AutoTyping(Resource) :
         '''자동 완성 쿼리'''
         return search_mgmt.get_autotyping()
 api.add_namespace(SearchFunc,'/search')
-
-@DataFunc.route('/<selector>')
+@DataFunc.route('')
 class GetData(Resource) :
+    @DataFunc.doc(params={
+        'id' :{'required':'true','type':'integer',
+                    'description':'가져올 공고 id (ex.?id=7747'},
+    })
+    def get(self) :
+        '''채용공고 id를 통한 데이터 1개만 요청'''
+        return data_mgmt.get_data()
+@DataFunc.route('/<selector>')
+class GetSelector(Resource) :
     @DataFunc.doc(params={
         'selector': '가져올 데이터 영역 선택\n- 플랫폼이름 (ex. wanted,naver)\n- 회사 규모 (ex. smallcompany, bigcompany)\n- 기술 직군 -> `/getdata/sector`에서 목록을 받아 해당 이름에 맞게 요청 (ex. Front-end, Back-end)',
         'page' : {'type':'integer',
@@ -93,7 +101,7 @@ class GetData(Resource) :
         })
     def get(self, selector) :
         '''페이지에 표시되는 데이터 API'''
-        return data_mgmt.get_data(selector)
+        return data_mgmt.get_data_selector(selector)
 @DataFunc.route('/company/<company_name>')
 class GetCompany(Resource) :
     @DataFunc.doc(params={'company_name': '기업 이름'})
