@@ -55,7 +55,7 @@ def get_search_result():
                                    index='mysql-jobdetail*')
     last_page = int(search_result['hits']['total']['value']/per_page)
     send_time = str(datetime.datetime.now())
-    send_data = [hits['_source'] for hits in search_result['hits']['hits']]
+    send_data = [hits['_source'] for hits in search_result['hits']['hits'] if db.session.query(JobDetail).filter_by(id=hits['_source']['id']).first() is not None]
 
     for index,item in enumerate(send_data) :
         if item['skill_tag'] is not None :
