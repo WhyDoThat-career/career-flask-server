@@ -26,7 +26,7 @@ def create_query(selector,page,per_page,newbie) :
                         .paginate(page,per_page=per_page,error_out=True))
         else :
             return (db.session.query(JobDetail)
-                        .filter_by(sector=selector)
+                        .filter_by(sector=selector, big_company=0)
                         .order_by(JobDetail.crawl_date.desc())
                         .paginate(page,per_page=per_page,error_out=True))
     else :
@@ -47,7 +47,7 @@ def create_query(selector,page,per_page,newbie) :
                         .paginate(page,per_page=per_page,error_out=True))
         else :
             return (db.session.query(JobDetail)
-                        .filter_by(sector=selector, newbie=newbie)
+                        .filter_by(sector=selector, newbie=newbie, big_company=0)
                         .order_by(JobDetail.crawl_date.desc())
                         .paginate(page,per_page=per_page,error_out=True))
 
