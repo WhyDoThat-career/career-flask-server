@@ -43,7 +43,7 @@ def get_search_result():
     term = request.args.get('term')
     sort = request.args.get('sort')
     if request.args.get('page') :
-        page = int(request.args.get('page'))
+        page = int(request.args.get('page'))-1
     else :
         page = 0
     if request.args.get('per_page') :
